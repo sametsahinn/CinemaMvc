@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "Sinema Bileti";
+}
+
+<div class="row">
+    @foreach (var film in ViewBag.FilmListDe)
+{
+    <form class="form-horizontal" method="post" action="/Home/HallTimeSelect">
+        <div class="col-sm-6 col-md-4" style="margin-bottom: 10px; width: 100%;">
+            <div class="thumbnail">
+                <img src="@Url.Content(@film.FILMIMG)" alt="film" />
+                <div class="caption">
+                    <h3>@film.FILMNM</h3>
+                    <p>@film.TIME</p>
+                    <p>@film.VISIONDATE</p>
+                    @*<p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>*@
+                    @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
+                </div>
+                @foreach (var filmInfo in ViewBag.FilmListInfo)
+                {
+                    <div class="caption">
+                        @*<h3>@filmInfo.HALLNM</h3>*@
+                        <p>@filmInfo.HALLNM</p>
+                        @*<p>@filmInfo.HALLTIME</p>*@
+                        <p><button class="btn btn-success col-sm-offset-4" style="margin-left: 0;" name="@filmInfo.H2ID" value="@filmInfo.HID"><i class="fa fa-clock-o"></i> @filmInfo.HALLTIME</button></p>
+                    </div>
+                }
+            </div>
+        </div>
+    </form>
+}
+</div>
+

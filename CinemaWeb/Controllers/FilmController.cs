@@ -73,7 +73,7 @@ namespace CinemaWeb.Controllers
                 dsFilm = dMan.ExecuteView_S("FILM", "*", "", "", "");
             }
 
-            if (txtFILMNM.ToString() == "" || txtFILMTYPID.ToString() == "" /*|| txtHALLID.ToString() == ""*/ || txtVISIONDATE.ToString() == "" || filmID.ToString() == "" || txtFILMEXPLANATION.ToString() == "" || txtFILMTIME.ToString() == ""/*|| hallID.ToString() == ""*/)
+            if (txtFILMNM.ToString() == "" || txtVISIONDATE.ToString() == "" || filmID.ToString() == "" || txtFILMEXPLANATION.ToString() == "" || txtFILMTIME.ToString() == ""/*|| hallID.ToString() == ""*/)
             {
                 Session["filmaddsuccess"] = false;
                 ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
@@ -127,11 +127,18 @@ namespace CinemaWeb.Controllers
         [HttpPost]
         public ActionResult FilmTypAdd(string txtFILMTYPNM)
         {
+            //HomeController homeC = new HomeController();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmTyp = dMan.ExecuteView_S("FILMTYP", "*", "", "", "");
+            }
+
             if (txtFILMTYPNM.ToString() == "")
             {
                 Session["filmtypaddsuccess"] = false;
                 ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
-                return Redirect("/Film/Film");
+                return Redirect("/Film/Category");
             }
             else
             {
@@ -139,13 +146,51 @@ namespace CinemaWeb.Controllers
                 newrow["ID"] = Guid.NewGuid();
                 newrow["FILMTYPNM"] = txtFILMTYPNM;
                 newrow["EDATE"] = DateTime.Now;
-                //newrow["EUSRID"] = null;
+                //newrow["EUSRID"] = homeC.UserData.USRID.ToString();
                 //newrow["UDATE"] = DateTime.Now;
                 //newrow["UUSRID"] = null;
                 newrow["NOTE"] = "En Son Kayıt İşlemi Gerçekleştirdi.";
                 AgentGc data = new AgentGc();
                 string veri = data.DataAdded("FILMTYP", newrow, dsFilmTyp.Tables[0]);
                 Session["filmtypaddsuccess"] = true;
+                ViewBag.addmessageinfo = veri;
+                return Redirect("/Home/Admin");
+            }
+        }
+
+        #endregion
+
+        #region HallAdd
+
+        [HttpPost]
+        public ActionResult HallAdd(string txtHALLNM)
+        {
+            //HomeController homeC = new HomeController();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsHall = dMan.ExecuteView_S("HALL", "*", "", "", "");
+            }
+
+            if (txtHALLNM.ToString() == "")
+            {
+                Session["halladdsuccess"] = false;
+                ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
+                return Redirect("/Film/Hall");
+            }
+            else
+            {
+                DataRow newrow = dsHall.Tables[0].NewRow();
+                newrow["ID"] = Guid.NewGuid();
+                newrow["HALLNM"] = txtHALLNM;
+                newrow["EDATE"] = DateTime.Now;
+                //newrow["EUSRID"] = homeC.UserData.USRID.ToString();
+                //newrow["UDATE"] = DateTime.Now;
+                //newrow["UUSRID"] = null;
+                newrow["NOTE"] = "En Son Kayıt İşlemi Gerçekleştirdi.";
+                AgentGc data = new AgentGc();
+                string veri = data.DataAdded("HALL", newrow, dsHall.Tables[0]);
+                Session["halladdsuccess"] = true;
                 ViewBag.addmessageinfo = veri;
                 return Redirect("/Home/Admin");
             }

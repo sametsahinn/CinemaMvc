@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Sinama Bileti";
+}
+
+<div style="margin: -30px 0 0 0; width: 100%; background: #252525; position: absolute; left: 0;">
+    <div class="hall-border-top"></div>
+    <h1 class="hall-title">Koltuğunu Seç</h1>
+    <div class="hall-border-top-effect"></div>
+</div>
+<div class="seating-out sep-top">
+    Salon 1
+    <span id="chosen-seating">
+
+    </span>
+</div>
+<div class="row" style="margin: 110px 0 0 0;position: absolute;width: 100%;left: 0;">
+    <form class="form-horizontal" method="post" action="/Home/HallTimeSelect">
+        <div class="col-sm-6 col-md-4" style="margin-bottom: 10px; width: 100%; background: #252525;">
+
+            <div class="hallcurtain"><span>Perde</span></div>
+            <div class="thumbnail" style="border: none; background: #252525;">
+                <div class="caption" style="height: 300px; width: 1000px; margin: 0 auto; text-align: center;">
+                    <ul class="seatul">
+                        @foreach (var film in ViewBag.FilmSeatList)
+                        {
+                            if (Convert.ToBoolean(@film.STATUS) == true)
+                            {
+                                <li class="seatbusy" style="top:35px;left:35px">
+                                    <a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="seatnull" style="top:35px;left:35px">
+                                    <a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    @*<p>@film.SEATNM</p>
+                        <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.HALLID" value="@film.STATUS"><i class="fa fa-credit-card"></i>@film.SEATNM</button></p>*@
+                </div>
+
+            </div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $(".seatnull").click(function () {
+                        $("#chosen-seating").text("- Koltuk - " + $(this).text());
+                        //var val = $(this).text();
+                        //ViewBag.ForSection = $(this).text();
+                        //var val = ViewBag.ForSection;
+                        //alert(val);
+                        //$.session("compareLeftContent", $(this).text());
+                        //alert($.session("compareLeftContent"));
+                        //alert("The paragraph was clicked.");
+                    });
+                });
+            </script>
+
+            <div class="caption" style="height: 200px;width:60%;margin: 0 auto;">
+                <ul class="seatstatus">
+                    <li>
+                        <label>
+                            <div class="occupied"></div>
+                            <span>Dolu Koltuklar</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <div class="occupied"></div>
+                            <span>Boş Koltuklar</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <div class="handicapped"></div>
+                            <span>Engelli Koltukları</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <div class="loveseat"></div>
+                            <span>İkili Koltuklar</span>
+                        </label>
+                    </li>
+                    <li>
+                        <label>
+                            <div class="chosen"></div>
+                            <span>Seçiminiz</span>
+                        </label>
+                    </li>
+                </ul>
+                @*<p>@film.SEATNM</p>
+                    <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.HALLID" value="@film.STATUS"><i class="fa fa-credit-card"></i>@film.SEATNM</button></p>*@
+            </div>
+        </div>
+    </form>
+</div>
+

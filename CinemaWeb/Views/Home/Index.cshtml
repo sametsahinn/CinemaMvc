@@ -1,31 +1,131 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Cinema";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="http://asp.net" class="btn btn-primary btn-large">Learn more &raquo;</a></p>
+<div class="row">
+    @foreach (var film in ViewBag.FilmListD)
+{
+    <form class="form-horizontal" method="post" action="/Home/FilmTicket">
+        <div class="col-sm-6 col-md-4" style="margin-bottom: 10px;">
+            <div class="thumbnail">
+                <img src="@Url.Content(@film.FILMIMG)" alt="film" />
+                <div class="caption">
+                    <h3>@film.FILMNM</h3>
+                    <p>@film.TIME</p>
+                    <p>@film.VISIONDATE</p>
+                    <p>@film.EXPLANATION</p>
+                    <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>
+                    @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
+                </div>
+            </div>
+        </div>
+    </form>
+}
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+    @*<div id="FilmsContainer">
+        <h2>Selecteer een Film</h2>
+        @foreach (var film in Model)
+        {
+            <div class="Film">
+                <h3 style="text-align:center;">@film.Titel</h3>
+                <div style="margin:auto;"><img src="@Url.Content(film.FilmArtUrl)" /></div>
+                <br />
+                <div class="DetailsLink">@Html.ActionLink("Details", "Details", new { titel = film.Titel })</div>
+            </div>
+        }
+    </div>*@
+
+    @*<form id="form1" name="form1" action="/Home/Bestel" onsubmit="return validateForm()" method="post">
+        <h2>Kies uw zetels door erop te klikken.</h2>
+
+        <div id="holder">
+            <ul id="zaal"></ul>
+        </div>
+
+        <div style="float:left;">
+            <ul id="zetelBeschrijving">
+                <li style="background:url('@Url.Content("~/images/onbezette_zetel_img.gif")') no-repeat scroll 0 0 transparent;">Onbezette Zetel</li>
+                <li style="background:url('@Url.Content("~/images/bezette_zetel_img.gif")') no-repeat scroll 0 0 transparent;">Gereserveerde Zetel</li>
+                <li style="background:url('@Url.Content("~/images/geselect_zetel_img.gif")') no-repeat scroll 0 0 transparent;">Geselecteerde Zetel</li>
+            </ul>
+        </div>
+
+        <div style="clear:both;width:100%">
+            <input type="hidden" name="hallid" value="@Model.ZaalId" />
+            <input type="hidden" id="select" name="select" value="" />
+            <input type="submit" id="btnSubmit" value="Bestel" />
+        </div>
+    </form>
+    <script>
+        ////////////////////
+        //Zaalinstellingen//
+        ////////////////////
+        var settings = {
+            rows: 5,
+            cols: 20,
+            rowCssPrefix: 'row-',
+            colCssPrefix: 'col-',
+            zetelWidth: 35,
+            zetelHeight: 35,
+            zetelCss: 'zetel',
+            bezetZetelCss: 'bezetZetel',
+            geselectZetelCss: 'geselectZetel'
+        };
+
+        //////////////////////
+        //Genereren van Zaal//
+        //////////////////////
+        var init = function (gereservZetel) {
+            var str = [], zetelNo, className;
+            for (i = 0; i < settings.rows; i++) {
+                for (j = 0; j < settings.cols; j++) {
+                    zetelNo = (i + j * settings.rows + 1);
+                    className = settings.zetelCss + ' ' + settings.rowCssPrefix + i.toString() + ' ' + settings.colCssPrefix + j.toString();
+                    if ($.isArray(gereservZetel) && $.inArray(zetelNo, gereservZetel) != -1) {
+                        className += ' ' + settings.bezetZetelCss;
+                    }
+                    str.push('<li class="' + className + '"' +
+                                          'style="top:' + (i * settings.zetelHeight).toString() + 'px;left:' + (j * settings.zetelWidth).toString() + 'px">' +
+                                          '<a title="' + zetelNo + '">' + zetelNo + '</a>' +
+                                          '</li>');
+                }
+            }
+            $('#zaal').html(str.join(''));
+        };
+
+        var reedsGereserv = [@ViewBag.ReedsGereserv];
+        init(reedsGereserv);
+
+        ////////////////////
+        //Klikken op zetel//
+        ////////////////////
+        $('.' + settings.zetelCss).click(function () {
+            if ($(this).hasClass(settings.bezetZetelCss)) {
+                alert('Deze zetel is al gereserveerd!');
+            }
+            else {
+                $(this).toggleClass(settings.geselectZetelCss);
+                var str = [];
+                $.each($('#zaal li.' + settings.geselectZetelCss + ' a'), function (index, value) {
+                    item = $(this).attr('title');
+                    str.push(item);
+                });
+                document.getElementById("select").value = str;
+                document.getElementById("TestBox").value = str;
+            }
+        });
+
+        ////////////////////
+        //Klikken op Bestel//
+        ////////////////////
+        function validateForm() {
+            var x = document.forms["form1"]["select"].value;
+            if (x == null || x == "") {
+                alert("Selecteer minstens 1 zetel.");
+                return false;
+            }
+        }
+    </script>*@
+
 </div>
