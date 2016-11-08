@@ -60,3 +60,198 @@ input[type="checkbox"].input-validation-error {
   background-color: #428bca;
   padding : 5px 15px;
 }
+
+.seatul {
+	 position:relative;
+	 margin:7px;
+}
+
+.seatul a{
+	 font-size:0.9em;
+     color: #fff;
+}
+
+.seatul a:hover{
+	 font-size:0.9em;
+     color: #fff;
+}
+
+.seatul li{
+     list-style: none outside none;
+     float: left;
+     margin-right: 25px;  
+}    
+
+/*.seatul li:hover{
+     background-color: #FF6;    
+}*/ 
+
+.seatnull{
+	 /*background:url("/images/null-seat.gif") no-repeat scroll 0 0 transparent;*/
+     background:url("/images/seatnull64x64.png") no-repeat scroll 0 0 transparent;
+	 height:64px;
+	 width:64px;
+	 display:block;	 
+}
+
+.seatnull:hover{
+     cursor: pointer;
+     opacity: 0.7;
+     /*background:url("/images/getselect-seat.gif") no-repeat scroll 0 0 transparent;*/
+     /**background:url("/images/seatnull32x32.png") no-repeat scroll 0 0 transparent;	*/ 
+}
+
+.seatbusy{
+	 /*background:url("/images/busy-seat.gif") no-repeat scroll 0 0 transparent;*/
+     background:url("/images/seatbusy64x64.png") no-repeat scroll 0 0 transparent;	
+	 height:64px;
+	 width:64px;
+	 display:block;	 
+}
+
+.seatstatus {
+    list-style-type: none;
+}
+
+.seatstatus li label div.occupied {
+  background-color: #4e4e4e;
+  position: relative;
+}
+
+.seatstatus li label div.occupied:after {
+  content: " ";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+}
+
+.seatstatus li label div.occupied:after {
+  background-image: url("/images/sprite-common.png");
+  background-position: -375px -731px;
+  width: 13px;
+  height: 13px;
+  top: 2px;
+  left: 2px;
+}
+
+.seatstatus {
+    display: inline-block;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+
+.seatstatus li {
+  float: left;
+  margin-right: 25px;
+}
+
+.seatstatus li label {
+  line-height: 17px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.seatstatus li label div {
+  float: left;
+  margin-right: 10px;
+  width: 17px;
+  height: 17px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  background: #808080;
+}
+
+
+.seatstatus li label div.handicapped {
+  background: #fec440;
+}
+
+.seatstatus li label div.loveseat {
+  background: #a188bd;
+}
+
+.seatstatus li label div.chosen {
+  background: #eb1689;
+}
+
+.hallcurtain {
+  width: 100%;
+  padding: 20px 0 40px;
+  text-align: center;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 1;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.hallcurtain:before {
+  content: " ";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+}
+
+.hallcurtain:before {
+  background: url("/images/big-screen.png") center top no-repeat;
+  width: 100%;
+  height: 156px;
+  top: 0;
+  left: 0;
+}
+
+.hallcurtain span {
+  position: relative;
+}
+
+.hall-border-top {
+  display: block;
+  position: absolute;
+  background: url("/images/hall-border-top.png") center top repeat-x #252525;
+  /*top: 163px;*/
+  left: 0;
+  height: 26px;
+  width: 100%;
+}
+
+.hall-border-top-effect {
+  display: block;
+  position: absolute;
+  background: url("/images/hall-border-top-effect.png") center top no-repeat;
+  top: 0;
+  left: 0;
+  height: 87px;
+  width: 100%;
+}
+
+.hall-title {
+  text-align: center;
+  font-weight: 300;
+  font-size: 26px;
+  color: #fff;
+  padding: 20px 0 5px;
+}
+
+.seating-out {
+  text-align: center;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 300;
+  line-height: 1.1em;
+  padding: 20px 10px;
+  margin: 53px 0 0 0;
+      background: #252525;
+}
+
+.sep-top {
+    position: absolute;
+    width: 100%;
+    left: 0;
+}
