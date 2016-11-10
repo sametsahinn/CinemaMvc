@@ -15,29 +15,31 @@
     </span>
 </div>
 <div class="row" style="margin: 110px 0 0 0;position: absolute;width: 100%;left: 0;">
-    <form class="form-horizontal" method="post" action="/Home/HallTimeSelect">
+    <form class="form-horizontal" method="post" action="/Home/FilmticketFunc">
         <div class="col-sm-6 col-md-4" style="margin-bottom: 10px; width: 100%; background: #252525;">
 
             <div class="hallcurtain"><span>Perde</span></div>
             <div class="thumbnail" style="border: none; background: #252525;">
-                <div class="caption" style="height: 300px; width: 1000px; margin: 0 auto; text-align: center;">
-                    <ul class="seatul">
-                        @foreach (var film in ViewBag.FilmSeatList)
-                        {
-                            if (Convert.ToBoolean(@film.STATUS) == true)
+                <div class="caption" style="height: 300px; width: 1070px; margin: 0 auto; text-align: center;">
+                        <ul class="seatul">
+                            @foreach (var film in ViewBag.FilmSeatList)
                             {
-                                <li class="seatbusy" style="top:35px;left:35px">
-                                    <a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>
-                                </li>
+                                if (Convert.ToBoolean(@film.STATUS) == true)
+                                {
+                                    <li class="seatbusy" style="top:35px;left:35px">
+                                        <button class="btn btn-success col-sm-offset-4" style="margin-left: 0; border: none; background: transparent;" title="@film.SEATNM" name="@film.HALLID" value="@film.ID">@film.SEATNM</button>
+                                        @*<a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>*@
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="seatnull" style="top:35px;left:35px">
+                                        <button class="btn btn-success col-sm-offset-4" style="margin-left: 0; border: none; background: transparent;" title="@film.SEATNM" name="@film.HALLID" value="@film.ID">@film.SEATNM</button>
+                                        @*<a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>*@
+                                    </li>
+                                }
                             }
-                            else
-                            {
-                                <li class="seatnull" style="top:35px;left:35px">
-                                    <a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>
-                                </li>
-                            }
-                        }
-                    </ul>
+                        </ul>
                     @*<p>@film.SEATNM</p>
                         <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.HALLID" value="@film.STATUS"><i class="fa fa-credit-card"></i>@film.SEATNM</button></p>*@
                 </div>
@@ -57,7 +59,6 @@
                     });
                 });
             </script>
-
             <div class="caption" style="height: 200px;width:60%;margin: 0 auto;">
                 <ul class="seatstatus">
                     <li>

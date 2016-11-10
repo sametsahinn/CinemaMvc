@@ -1,9 +1,11 @@
 ﻿@{
     ViewBag.Title = "Admin Paneli";
 }
-<div class="row">
-    <div class="col-lg-6 col-lg-offset-3">
 
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+    <div class="row">
+    <div class="col-lg-6 col-lg-offset-3">
         <div class="row">
             <div class="col-xs-6 col-md-3">
                 <a href="#" class="thumbnail">
@@ -46,7 +48,7 @@
                         </div>
                         <div class="col-sm-4">
                             <a class="btn btn-block btn-default" href="@Url.Action("Category", "Film")">
-                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategoti Kayıt</small>
+                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategori Kayıt</small>
                             </a>
                         </div>
                     </div>
@@ -55,18 +57,18 @@
                     <br />
                     <div class="row margin">
                         <div class="col-sm-4">
-                            <a class="btn btn-block btn-default" href="@Url.Action("Film", "Film")">
+                            <a class="btn btn-block btn-default" href="@Url.Action("FilmDelete", "Film")">
                                 <i class="fa fa-list fa-3x"></i><br> <small>Film Sil</small>
                             </a>
                         </div>
                         <div class="col-sm-4">
-                            <a class="btn btn-block btn-default" href="@Url.Action("Index","Projects")">
+                            <a class="btn btn-block btn-default" href="@Url.Action("HallDelete", "Film")">
                                 <i class="fa fa-th fa-3x"></i><br> <small>Salon Sil</small>
                             </a>
                         </div>
                         <div class="col-sm-4">
-                            <a class="btn btn-block btn-default" href="@Url.Action("Index","Payments")">
-                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategoti Sil</small>
+                            <a class="btn btn-block btn-default" href="@Url.Action("CategoryDelete", "Film")">
+                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategori Sil</small>
                             </a>
                         </div>
                     </div>
@@ -75,18 +77,18 @@
                     <br />
                     <div class="row margin">
                         <div class="col-sm-4">
-                            <a class="btn btn-block btn-default" href="@Url.Action("Film", "Film")">
+                            <a class="btn btn-block btn-default" href="@Url.Action("FilmUpdate", "Film")">
                                 <i class="fa fa-list fa-3x"></i><br> <small>Film Güncelle</small>
                             </a>
                         </div>
                         <div class="col-sm-4">
-                            <a class="btn btn-block btn-default" href="@Url.Action("Index","Projects")">
+                            <a class="btn btn-block btn-default" href="@Url.Action("HallUpdate", "Film")">
                                 <i class="fa fa-th fa-3x"></i><br> <small>Salon Güncelle</small>
                             </a>
                         </div>
                         <div class="col-sm-4">
-                            <a class="btn btn-block btn-default" href="@Url.Action("Index","Payments")">
-                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategoti Güncelle</small>
+                            <a class="btn btn-block btn-default" href="@Url.Action("CategoryUpdate", "Film")">
+                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategori Güncelle</small>
                             </a>
                         </div>
                     </div>
@@ -133,3 +135,12 @@
         </div>*@
     </div>
 </div>
+}
+else { 
+            <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-remove"></span>
+                <span class="sr-only">Error:</span>
+                Yetkiniz Yok.
+            </div>
+}
+

@@ -1,0 +1,100 @@
+﻿
+@{
+    ViewBag.Title = "Filmticket";
+}
+
+<h2>Bilet İşlemi</h2>
+@foreach (var film in ViewBag.SelectFilm)
+{
+    <form class="form-horizontal" method="post" action="/Home/FilmticketFunc">
+        <div class="col-sm-6 col-md-4" style="margin-bottom: 10px;">
+            <div class="thumbnail">
+                <img src="@Url.Content(@film.FILMIMG)" alt="film" />
+                <div class="caption">
+                    <h3>@film.FILMNM</h3>
+                    <p>@film.TIME</p>
+                    <p>@film.VISIONDATE</p>
+                    @*<p>@film.EXPLANATION</p>*@
+                    @*<p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>*@
+                    @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
+                </div>
+            </div>
+        </div>
+    </form>
+}
+
+<div class="col-sm-6 col-md-4" style="margin-bottom: 10px; width: 66%; height: 600px;">
+    <div class="panel panel-default">
+        <div class="panel-heading">Bilgileriniz</div>
+        <div class="panel-body">
+@foreach (var user in ViewBag.LogUser)
+{
+    <form class="form-horizontal" method="post" action="/Home/FilmticketFuncEnd">
+        <div class="form-group">
+            <label for="fulname" class="col-sm-4 control-label">Adınız :</label>
+            <input class="form-control col-xs-12" name="txtFULNM" value="@user.FULNM" readonly="readonly" placeholder="Ad-Soyad" />
+        </div>
+        <div class="form-group">
+            <label for="EMAIL" class="col-sm-4 control-label">E-mail :</label>
+            <input class="form-control col-xs-12" name="txtEMAIL" value="@user.EMAIL" readonly="readonly" placeholder="E-mail" />
+        </div>
+        <div class="form-group">
+            <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
+            <input class="form-control col-xs-12" id="txtCARDNO" data-mask="9999-9999-999-9999" readonly="readonly" name="txtCARDNO" value="@user.CARDNO" placeholder="Kart No" />
+        </div>
+        <div class="form-group">
+            <label for="CVC" class="col-sm-4 control-label">CVC :</label>
+            <input class="form-control col-xs-12" name="txtCVC" value="@user.CVC" readonly="readonly" placeholder="CVC" />
+        </div>
+        <div class="form-group">
+            <label for="STKDAY" class="col-sm-4 control-label">STK (Gün / Ay) :</label>
+            <input class="form-control col-xs-12" name="txtSTKDAY" value="@user.STKDAY / @user.STKMONTH" readonly="readonly" placeholder="Gün / Ay" />
+        </div>
+        @*<div class="form-group">
+                <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi (Ay) :</label>
+                <input class="form-control col-xs-12" name="txtSTKMONTH" value="@user.STKMONTH" placeholder="Ay" />
+            </div>*@
+        <button class="btn btn-success col-sm-offset-4">Bilet Al</button>
+    </form>
+}
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('[name="txtCARDNO"]').mask('9999-9999-999-9999');
+                });
+            </script>
+            @*@Html.Partial("Counter")*@
+        </div>
+    </div>
+
+    @*@if (Convert.ToBoolean(Session["ISSENDMAIL"]))
+    {
+        <div class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Modal title</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>One fine body&hellip;</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-remove"></span>
+                <span class="sr-only">Error:</span>
+                Başarısız.
+            </div>
+    }*@
+</div>
+
+@*<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>*@
+

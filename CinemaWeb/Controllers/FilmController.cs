@@ -46,7 +46,27 @@ namespace CinemaWeb.Controllers
             return View();
         }
 
+        public ActionResult FilmUpdate()
+        {
+            return View();
+        }
+        
+        public ActionResult FilmDelete()
+        {
+            return View();
+        }
+
         public ActionResult Hall()
+        {
+            return View();
+        }
+
+        public ActionResult HallUpdate()
+        {
+            return View();
+        }
+
+        public ActionResult HallDelete()
         {
             return View();
         }
@@ -55,6 +75,17 @@ namespace CinemaWeb.Controllers
         {
             return View();
         }
+
+        public ActionResult CategoryUpdate()
+        {
+            return View();
+        }
+
+        public ActionResult CategoryDelete()
+        {
+            return View();
+        }
+
 
         //http://getbootstrap.com/javascript/
         //https://www.tutorialspoint.com/bootstrap/bootstrap_thumbnails.htm

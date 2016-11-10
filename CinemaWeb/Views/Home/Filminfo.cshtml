@@ -17,14 +17,20 @@
                     @*<p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>*@
                     @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
                 </div>
-                @foreach (var filmInfo in ViewBag.FilmListInfo)
+                @foreach (var filmHallGroup in ViewBag.FilmHallGroup)
                 {
-                    <div class="caption">
-                        @*<h3>@filmInfo.HALLNM</h3>*@
-                        <p>@filmInfo.HALLNM</p>
-                        @*<p>@filmInfo.HALLTIME</p>*@
-                        <p><button class="btn btn-success col-sm-offset-4" style="margin-left: 0;" name="@filmInfo.H2ID" value="@filmInfo.HID"><i class="fa fa-clock-o"></i> @filmInfo.HALLTIME</button></p>
-                    </div>
+                    <p>@filmHallGroup.Key</p>
+                    
+                    foreach (var filmInfo in ViewBag.FilmListInfo)
+                    {                         
+                        <div class="caption">
+                            @*<h3>@filmInfo.HALLNM</h3>*@
+                            @*<p>@filmInfo.HALLNM</p>*@
+                            @*<p>@filmInfo.HALLTIME</p>*@
+                            <p><button class="btn btn-success col-sm-offset-4" style="margin-left: 0;" name="@filmInfo.H2ID" value="@filmInfo.HID"><i class="fa fa-clock-o"></i> @filmInfo.HALLTIME</button></p>
+                        </div>
+                        break;
+                    }
                 }
             </div>
         </div>

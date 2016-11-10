@@ -37,6 +37,19 @@ namespace CinemaWeb.Controllers
 
         #endregion
 
+        public class UserList
+        {
+            public Guid ID { get; set; }
+            public string USRNM { get; set; }
+            public string PWD { get; set; }
+            public string FULNM { get; set; }
+            public string EMAIL { get; set; }
+            public string CARDNO { get; set; }
+            public string CVC { get; set; }
+            public string STKDAY { get; set; }
+            public string STKMONTH { get; set; }
+        }
+
         //
         // GET: /Account/
         public ActionResult Login()
@@ -55,6 +68,32 @@ namespace CinemaWeb.Controllers
         // GET: /Account/
         public ActionResult Manage()
         {
+            DataSet dsUser = new DataSet();
+            string USRID = Session["USRIDv"].ToString();
+            using (DataVw dMan = new DataVw())
+            {
+                dsUser = dMan.ExecuteView_S("USR", "*", USRID, "", "ID = ");
+            }
+
+            List<UserList> userList = new List<UserList>();
+            foreach (DataRow dr in dsUser.Tables[0].Rows)
+            {
+                userList.Add(new UserList
+                {
+                    ID = (Guid)dr["ID"],
+                    USRNM = dr["USRNM"].ToString(),
+                    PWD = CryptionHelper.Decrypt(dr["PWD"].ToString(), "tb"),
+                    EMAIL = dr["EMAIL"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    CARDNO = dr["CARDNO"].ToString(),
+                    CVC = dr["CVC"].ToString(),
+                    STKDAY = dr["STKDAY"].ToString(),
+                    STKMONTH = dr["STKMONTH"].ToString()
+                });
+            }
+
+            ViewBag.UserList = userList;
+
             return View();
         }
 
@@ -89,9 +128,11 @@ namespace CinemaWeb.Controllers
 
                 if (txtUsername.ToString() == row["USRNM"].ToString() && txtPassword.ToString() == CryptionHelper.Decrypt(row["PWD"].ToString(), "tb").ToString())
                 {
+                    Session["USRIDv"] = row["ID"].ToString();
                     Session["name"] = row["FULNM"].ToString();
                     Session["admin"] = true;
                     Session["IsAuthenticated"] = true;
+                    Session["IS_SYSADM"] = row["IS_SYSADM"].ToString();
 
                     if (row["IS_SYSADM"].ToString() == "True")
                     {
@@ -146,8 +187,10 @@ namespace CinemaWeb.Controllers
 
         #endregion
 
+        #region UserAdd
+
         [HttpPost]
-        public ActionResult UserAdd(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL, HttpPostedFileBase file)
+        public ActionResult UserAdd(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL, string txtCARDNO, string txtCVC, string txtSTKDAY, string txtSTKMONTH, HttpPostedFileBase file)
         {
             string filefo = "";
             using (DataVw dMan = new DataVw())
@@ -155,7 +198,7 @@ namespace CinemaWeb.Controllers
                 dsUser = dMan.ExecuteView_S("USR", "*", "", "", "");
             }
 
-            if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "")
+            if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "" || txtCARDNO.ToString() == "" || txtCVC.ToString() == "" || txtSTKDAY.ToString() == "" || txtSTKMONTH.ToString() == "")
             {
                 Session["useraddsuccess"] = false;
                 ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
@@ -185,12 +228,21 @@ namespace CinemaWeb.Controllers
                 newrow["USRNM"] = txtUSRNM;
                 newrow["FULNM"] = txtFULNM;
                 newrow["EMAIL"] = txtEMAIL;
-                newrow["PWD"] = CryptionHelper.Encrypt(txtPWD, "tb"); ;
+                newrow["PWD"] = CryptionHelper.Encrypt(txtPWD, "tb");
                 newrow["IS_ADMIN"] = 1;
                 newrow["IS_SYSADM"] = 0;
                 newrow["IS_HR"] = 0;
                 newrow["CHNG_PWD"] = 0;
+                if (filefo == ""){
+                    newrow["AVATAR"] = "~/images/avatar/nullavatar.jpg";
+                }else{
+                    newrow["AVATAR"] = filefo;
+                }
                 newrow["AVATAR"] = filefo;
+                newrow["CARDNO"] = txtCARDNO;
+                newrow["CVC"] = txtCVC;
+                newrow["STKDAY"] = txtSTKDAY;
+                newrow["STKMONTH"] = txtSTKMONTH;
                 newrow["EDATE"] = DateTime.Now;
                 //newrow["EUSRID"] = null;
                 //newrow["UDATE"] = DateTime.Now;
@@ -204,7 +256,89 @@ namespace CinemaWeb.Controllers
             }
         }
 
+        #endregion
 
+        #region ManageControl
+
+        [HttpPost]
+        public ActionResult SelectUserInfo(System.Web.Mvc.FormCollection collection)
+        {
+            string USRID = collection.AllKeys[0].ToString();
+
+            return Redirect("/Account/SelectUserInfoChange");
+        }
+
+        [HttpPost]
+        public ActionResult SelectUserInfoChange(string txtUSRNM, string txtFULNM, string txtPWD, string txtEMAIL, string txtCARDNO, string txtCVC, string txtSTKDAY, string txtSTKMONTH, HttpPostedFileBase file, System.Web.Mvc.FormCollection collection)
+        {
+            DataSet dsUser = new DataSet();
+            string USRID = collection.AllKeys[8].ToString();
+            string filefo = "";
+            using (DataVw dMan = new DataVw())
+            {
+                dsUser = dMan.ExecuteView_S("USR", "*", USRID, "", "ID = ");
+            }
+
+            if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "" || txtCARDNO.ToString() == "" || txtCVC.ToString() == "" || txtSTKDAY.ToString() == "" || txtSTKMONTH.ToString() == "")
+            {
+                return Content("<script language='javascript' type='text/javascript'>alert('Eksik veri girişi! Tüm Alanları Doldurunuz.');</script>");  ////Alert Mesajı Göndermek için.
+                //ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
+                //return Redirect("/Account/Manage");
+            }
+            else
+            {
+                if (file != null)
+                {
+                    string pic = System.IO.Path.GetFileName(file.FileName);
+                    string path = System.IO.Path.Combine(Server.MapPath("~/images/avatar"), pic);
+                    string pathd = "~/images/avatar/"+ pic;
+                    // file is uploaded
+                    file.SaveAs(path);
+                    filefo = pathd;
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        file.InputStream.CopyTo(ms);
+                        byte[] array = ms.GetBuffer();
+                    }
+
+                }
+
+                DataRow newrow = dsUser.Tables[0].Rows[0];
+                newrow["ID"] = USRID;
+                newrow["USRNM"] = txtUSRNM;
+                newrow["FULNM"] = txtFULNM;
+                newrow["EMAIL"] = txtEMAIL;
+                newrow["PWD"] = CryptionHelper.Encrypt(txtPWD, "tb");
+                newrow["IS_ADMIN"] = 1;
+                newrow["IS_SYSADM"] = 0;
+                newrow["IS_HR"] = 0;
+                newrow["CHNG_PWD"] = 0;
+                if (filefo == ""){
+                    newrow["AVATAR"] = "~/images/avatar/nullavatar.jpg";
+                }else{
+                    newrow["AVATAR"] = filefo;
+                }
+                newrow["CARDNO"] = txtCARDNO;
+                newrow["CVC"] = txtCVC;
+                newrow["STKDAY"] = txtSTKDAY;
+                newrow["STKMONTH"] = txtSTKMONTH;
+                //newrow["EDATE"] = DateTime.Now;
+                //newrow["EUSRID"] = null;
+                newrow["UDATE"] = DateTime.Now;
+                //newrow["UUSRID"] = null;
+                newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
+                AgentGc data = new AgentGc();
+                string veri = data.DataModified("USR", newrow, dsUser.Tables[0]);
+                return Content("<script language='javascript' type='text/javascript'>alert('" + veri + "');</script>");
+                //ViewBag.addmessageinfo = veri;
+                //return Redirect("/Account/Manage");
+            }
+            return Redirect("/Account/Manage");
+        }
+
+        #endregion
+        
         private IAuthenticationManager AuthenticationManager
         {
             get
