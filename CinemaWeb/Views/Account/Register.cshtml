@@ -14,52 +14,54 @@
                 Kayıt Edildi.
             </div>
         }
-        else { 
+        @*else { 
             Session["useraddsuccess"] = false;
             <div class="alert alert-danger" role="alert">
                 <span class="glyphicon glyphicon-remove"></span>
                 <span class="sr-only">Error:</span>
-                @*@ViewBag.addmessage*@
+                
                 Eksik veri girişi! Tüm Alanları Doldurunuz.
             </div>
-        };
-        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/UserAdd">
+        };*@
+        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/UserAdd" style="width: 50%;margin: 0 auto;">
+            <hr class="colorgraph">
             <div class="form-group">
                 <label for="fulname" class="col-sm-4 control-label">Adınız :</label>
-                <input class="form-control col-xs-12" name="txtFULNM" placeholder="Ad-Soyad" />
+                <input class="form-control col-xs-12" name="txtFULNM" required="" autofocus="" placeholder="Ad-Soyad" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Kullanıcı Adı :</label>
-                <input class="form-control col-xs-12" name="txtUSRNM" placeholder="Kullanıcı adı" value="@Request.Form["username"]" />
+                <input class="form-control col-xs-12" name="txtUSRNM" required="" placeholder="Kullanıcı adı" value="@Request.Form["username"]" />
             </div>
             <div class="form-group">
                 <label for="EMAIL" class="col-sm-4 control-label">E-mail :</label>
-                <input class="form-control col-xs-12" name="txtEMAIL" placeholder="E-mail" />
+                <input class="form-control col-xs-12" name="txtEMAIL" required="" placeholder="E-mail" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Parola :</label>
-                <input class="form-control" name="txtPWD" type="password" placeholder="Parola" />
+                <input class="form-control" name="txtPWD" type="password" required="" placeholder="Parola" />
             </div>
             <div class="form-group">
                 <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
-                <input class="form-control" name="txtCARDNO" placeholder="Kart No" />
+                <input class="form-control" name="txtCARDNO" required="" placeholder="Kart No" />
             </div>
             <div class="form-group">
                 <label for="CVC" class="col-sm-4 control-label">CVC :</label>
-                <input class="form-control" name="txtCVC" placeholder="CVC" />
+                <input class="form-control" name="txtCVC" required="" placeholder="CVC" />
             </div>
             <div class="form-group">
                 <label for="STKDAY" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                <input class="form-control" name="txtSTKDAY" placeholder="Gün" />
+                <input class="form-control" name="txtSTKDAY" required="" placeholder="Gün" />
             </div>
             <div class="form-group">
                 <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                <input class="form-control" name="txtSTKMONTH" placeholder="Ay" />
-            </div>            
+                <input class="form-control" name="txtSTKMONTH" required="" placeholder="Ay" />
+            </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Profil :</label>
-                <input type="file" id="file" name="file" />
+                <input type="file" id="file" required="" name="file" />
             </div>
+            <hr class="colorgraph">
             <button class="btn btn-success col-sm-offset-4">Kayıt Ol</button>
         </form>
 

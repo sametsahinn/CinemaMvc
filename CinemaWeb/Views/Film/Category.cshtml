@@ -14,21 +14,22 @@
                 Kayıt Edildi.
             </div>
         }
-        else
+        @*else
         {
             Session["filmtypaddsuccess"] = false;
             <div class="alert alert-danger" role="alert">
                 <span class="glyphicon glyphicon-remove"></span>
                 <span class="sr-only">Error:</span>
-                @*@ViewBag.addmessage*@
                 Eksik veri girişi! Tüm Alanları Doldurunuz.
             </div>
-        };
-        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/FilmTypAdd">
+        };*@
+        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/FilmTypAdd" style="width: 50%;margin: 0 auto;">
+            <hr class="colorgraph">
             <div class="form-group">
                 <label for="fulname" class="col-sm-4 control-label">Kategori :</label>
-                <input class="form-control col-xs-12" name="txtFILMTYPNM" placeholder="Kategori" />
+                <input class="form-control col-xs-12" name="txtFILMTYPNM" required="" autofocus="" placeholder="Kategori" />
             </div>
+            <hr class="colorgraph">
             <button class="btn btn-success col-sm-offset-4">Kategori Ekle</button>
         </form>
 

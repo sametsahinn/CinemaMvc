@@ -11,10 +11,12 @@
                     <img src="@Url.Content(Session["avatarimg"].ToString())" alt="avatar" />
                 </a>
             </div>
-        </div>
+        </div>   
+        <hr class="colorgraph">     
     </div>
 
     <table class="table table-bordered">
+        
         <thead class="thead-inverse">
             <tr>
                 <th>#</th>
@@ -56,47 +58,49 @@
         <div class="panel-heading">Bilgilerinizi Güncelleyin</div>
         <div class="panel-body">
             @foreach (var user in ViewBag.UserList)
-            {
-                <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/SelectUserInfoChange">
-                    <div class="form-group">
-                        <label for="username" class="col-sm-4 control-label">Kullanıcı Adı :</label>
-                        <input class="form-control col-xs-12" name="txtUSRNM" placeholder="Kullanıcı adı" value="@user.USRNM" />
-                    </div>
-                    <div class="form-group">
-                        <label for="username" class="col-sm-4 control-label">Parola :</label>
-                        <input class="form-control" name="txtPWD" type="password" placeholder="Parola" value="@user.PWD" />
-                    </div>
-                    <div class="form-group">
-                        <label for="fulname" class="col-sm-4 control-label">Adınız :</label>
-                        <input class="form-control col-xs-12" name="txtFULNM" placeholder="Ad-Soyad" value="@user.FULNM" />
-                    </div>
-                    <div class="form-group">
-                        <label for="EMAIL" class="col-sm-4 control-label">E-mail :</label>
-                        <input class="form-control col-xs-12" name="txtEMAIL" placeholder="E-mail" value="@user.EMAIL" />
-                    </div>
-                    <div class="form-group">
-                        <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
-                        <input class="form-control" name="txtCARDNO" placeholder="Kart No" value="@user.CARDNO" />
-                    </div>
-                    <div class="form-group">
-                        <label for="CVC" class="col-sm-4 control-label">CVC :</label>
-                        <input class="form-control" name="txtCVC" placeholder="CVC" value="@user.CVC" />
-                    </div>
-                    <div class="form-group">
-                        <label for="STKDAY" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                        <input class="form-control" name="txtSTKDAY" placeholder="Gün" value="@user.STKDAY" />
-                    </div>
-                    <div class="form-group">
-                        <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                        <input class="form-control" name="txtSTKMONTH" placeholder="Ay" value="@user.STKMONTH" />
-                    </div>
-                    <div class="form-group">
-                        <label for="username" class="col-sm-4 control-label">Profil :</label>
-                        <input type="file" id="file" name="file" />
-                    </div>
-                    <button id="@user.ID" class="btn btn-success col-sm-offset-4" name="@user.ID" value="@user.ID">Güncelle</button>
-                </form>
-            }
+{
+    <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Account/SelectUserInfoChange" style="width: 50%;margin: 0 auto;">
+        <hr class="colorgraph">
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Kullanıcı Adı :</label>
+            <input class="form-control col-xs-12" name="txtUSRNM" required="" autofocus="" placeholder="Kullanıcı adı" value="@user.USRNM" />
+        </div>
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Parola :</label>
+            <input class="form-control" name="txtPWD" type="password" required="" placeholder="Parola" value="@user.PWD" />
+        </div>
+        <div class="form-group">
+            <label for="fulname" class="col-sm-4 control-label">Adınız :</label>
+            <input class="form-control col-xs-12" name="txtFULNM" required="" placeholder="Ad-Soyad" value="@user.FULNM" />
+        </div>
+        <div class="form-group">
+            <label for="EMAIL" class="col-sm-4 control-label">E-mail :</label>
+            <input class="form-control col-xs-12" name="txtEMAIL" required="" placeholder="E-mail" value="@user.EMAIL" />
+        </div>
+        <div class="form-group">
+            <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
+            <input class="form-control" name="txtCARDNO" required="" placeholder="Kart No" value="@user.CARDNO" />
+        </div>
+        <div class="form-group">
+            <label for="CVC" class="col-sm-4 control-label">CVC :</label>
+            <input class="form-control" name="txtCVC" required="" placeholder="CVC" value="@user.CVC" />
+        </div>
+        <div class="form-group">
+            <label for="STKDAY" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
+            <input class="form-control" name="txtSTKDAY" required="" placeholder="Gün" value="@user.STKDAY" />
+        </div>
+        <div class="form-group">
+            <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
+            <input class="form-control" name="txtSTKMONTH" required="" placeholder="Ay" value="@user.STKMONTH" />
+        </div>
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Profil :</label>
+            <input type="file" id="file" required="" name="file" />
+        </div>
+        <hr class="colorgraph">
+        <button id="@user.ID" class="btn btn-success col-sm-offset-4" name="@user.ID" value="@user.ID">Güncelle</button>
+    </form>
+}
         </div>
     </div>
 

@@ -27,14 +27,14 @@
                                 if (Convert.ToBoolean(@film.STATUS) == true)
                                 {
                                     <li class="seatbusy" style="top:35px;left:35px">
-                                        <button class="btn btn-success col-sm-offset-4" style="margin-left: 0; border: none; background: transparent;" title="@film.SEATNM" name="@film.HALLID" value="@film.ID">@film.SEATNM</button>
+                                        <button class="btn btn-success col-sm-offset-4" style="margin-left: 0; border: none; background: transparent;" title="@film.SEATNM" name="1" value="@film.ID">@film.SEATNM</button>
                                         @*<a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>*@
                                     </li>
                                 }
                                 else
                                 {
                                     <li class="seatnull" style="top:35px;left:35px">
-                                        <button class="btn btn-success col-sm-offset-4" style="margin-left: 0; border: none; background: transparent;" title="@film.SEATNM" name="@film.HALLID" value="@film.ID">@film.SEATNM</button>
+                                        <button class="btn btn-success col-sm-offset-4" style="margin-left: 0; border: none; background: transparent;" title="@film.SEATNM" name="0" value="@film.ID">@film.SEATNM</button>
                                         @*<a title="@film.SEATNM" name="@film.HALLID">@film.SEATNM</a>*@
                                     </li>
                                 }
@@ -97,5 +97,42 @@
             </div>
         </div>
     </form>
+
+    @*<div class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->*@
+    @*visibility-inherit*@
+  
+
+    @if (Convert.ToBoolean(Session["SEATBUSY"]))
+{
+    <div class="alert alert-danger alert-dismissible fade in" role="alert" style="width: 50%;margin: 0 auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <h4>Dolu Koltuk!</h4>
+        <p>Lüften Boş Koltuk Seçiniz.</p>
+        @*<p>
+                <button type="button" class="btn btn-danger">Take this action</button>
+                <button type="button" class="btn btn-default">Or do this</button>
+            </p>*@
+    </div>        
+}
 </div>
+
+
 

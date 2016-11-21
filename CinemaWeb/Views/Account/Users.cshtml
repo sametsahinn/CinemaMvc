@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+}
+
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+<h2>Kullanıcılar</h2>
+    
+    <div class="row">
+    @*<div class="col-lg-6 col-lg-offset-3" style="margin: 0 0 50px 0;">
+        <div class="row">
+            <div class="col-xs-6 col-md-3">
+                <a href="#" class="thumbnail">
+                    <img src="@Url.Content(Session["avatarimg"].ToString())" alt="avatar" />
+                </a>
+            </div>
+        </div>   
+        <hr class="colorgraph">     
+    </div>*@
+
+    <table class="table table-bordered">
+        
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th>Aktif?</th>
+                <th>Kullanıcı Adınız</th>
+                <th>Parola</th>
+                <th>Adınız</th>
+                <th>E-mail</th>
+                <th>Sistem Admini?</th>
+                <th>Kullanıcı?</th>
+                <th>Personel?</th>
+                <th>Şifre Değişikliği?</th>
+                <th></th>
+                <th>Kart Numaranız</th>
+                <th>CVC</th>
+                <th>STK (Gün)</th>
+                <th>STK (Ay)</th>
+                <th>Kayıt Edildiği Tarih</th>
+                <th>Kayıt Güncellediği Tarih</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+              @foreach (var user in ViewBag.UserList)
+                    {
+                        <tr>
+                            <form class="form-horizontal" method="post" action="/Account/**">
+                                <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                                <td style="text-align: center; line-height: 50px;">@user.IS_AC</td>
+                                <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
+                                <td style="text-align: center; line-height: 50px;">@user.PWD</td>
+                                <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
+                                <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
+                                <td style="text-align: center; line-height: 50px;">@user.IS_SYSADM</td>
+                                <td style="text-align: center; line-height: 50px;">@user.IS_ADMIN</td>
+                                <td style="text-align: center; line-height: 50px;">@user.IS_HR</td>
+                                <td style="text-align: center; line-height: 50px;">@user.CHNG_PWD</td>
+                                <td style="text-align: center; line-height: 50px;">@user.AVATAR</td>
+                                <td style="text-align: center; line-height: 50px;">@user.CARDNO</td>
+                                <td style="text-align: center; line-height: 50px;">@user.CVC</td>
+                                <td style="text-align: center; line-height: 50px;">@user.STKDAY</td>
+                                <td style="text-align: center; line-height: 50px;">@user.STKMONTH</td>
+                                <td style="text-align: center; line-height: 50px;">@user.EDATE</td>
+                                <td style="text-align: center; line-height: 50px;">@user.UDATE</td>
+                                <td style="text-align: center; line-height: 50px;"><button id="@user.ID" class="btn btn-success col-sm-offset-4" style="margin: 0;" name="@user.ID" value="@user.ID"><i class="fa fa-credit-card"></i>Bilgilerini Güncelle</button></td>
+                            </form>
+                        </tr>
+                    }
+        </tbody>
+    </table>
+</div>
+
+}
+
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span class="sr-only">Error:</span>
+        Yetkiniz Yok.
+    </div>
+}
+

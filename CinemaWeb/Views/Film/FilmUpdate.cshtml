@@ -5,3 +5,36 @@
 
 <h2>Film Güncelle</h2>
 
+<div class="row">
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th></th>
+                <th>Film İsmi</th>
+                <th>Film Tipi</th>
+                <th>Vizyon Tarihi</th>
+                <th>Süre</th>
+                <th>Açıklama</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var filmTypV in ViewBag.FilmTypV)
+            {               
+                <tr>
+                    <form class="form-horizontal" method="post" action="/Film/FilmUpdateSelect">
+                        <th style="text-align: center; line-height: 290px;" scope="row">1</th>
+                        <td style="text-align: center; line-height: 290px; width: 150px;"><img src="@Url.Content(@filmTypV.FILMIMG)" alt="avatar" /></td>
+                        <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.FILMNM</td>
+                        <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.FILMTYPNM</td>
+                        <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.VISIONDATE</td>
+                        <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.TIME</td>
+                        <td style="text-align: center; line-height: 50px;">@filmTypV.EXPLANATION</td>
+                        <td style="text-align: center; line-height: 290px;"><button id="@filmTypV.ID" class="btn btn-primary col-sm-offset-4" style="margin: 0;" name="btnFilmID" value="@filmTypV.ID"><i class="fa fa-refresh" aria-hidden="true"></i> Seç</button></td>
+                    </form>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

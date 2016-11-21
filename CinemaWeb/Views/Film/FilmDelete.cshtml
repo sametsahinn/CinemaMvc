@@ -5,3 +5,30 @@
 
 <h2>Film Sil</h2>
 
+<div class="row">
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th>Film</th>
+                <th>Film</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var film in ViewBag.FilmList)
+            {
+                <tr>
+                    <form class="form-horizontal" method="post" action="/Film/FilmDeleteAction">
+
+                        <th style="text-align: center; line-height: 290px;" scope="row">1</th>
+                        <td style="text-align: center; line-height: 290px;"><img src="@Url.Content(@film.FILMIMG)" alt="avatar" /></td>
+                        <td style="text-align: center; line-height: 290px;">@film.FILMNM</td>
+                        <td style="text-align: center; line-height: 290px;"><button id="@film.ID" cl class="btn btn-danger col-sm-offset-4" style="margin: 0;" name="btnFilm" value="@film.ID"><i class="fa fa-times" aria-hidden="true"></i> Sil</button></td>
+                    </form>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

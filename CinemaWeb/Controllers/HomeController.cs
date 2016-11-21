@@ -12,6 +12,9 @@ using OfficeAgent.Cryption;
 using OfficeAgent.Object;
 using System.Net.Mail;
 using System.Text;
+using System.Drawing;
+using System.IO;
+using System.Data.SqlClient;
 
 namespace CinemaWeb.Controllers
 {
@@ -100,8 +103,10 @@ namespace CinemaWeb.Controllers
         // GET: /Home/
         public ActionResult Index(IEnumerable<FilmD> film)
         {
-
+            //ViewBag.inherit = "visibility-hidden";
             //Session["USRID"] = "";
+            Session["SEATBUSY"] = false;
+            Session["TICKETSUCCESS"] = false;
 
             using (DataVw dMan = new DataVw())
             {
@@ -350,11 +355,26 @@ namespace CinemaWeb.Controllers
             if (Convert.ToBoolean(Session["IsAuthenticated"]))
             {
                 string SEATID = collection[0].ToString(); //Salon
-                //string HALLTIMEIDV = collection.AllKeys[0].ToString();  //Saat
+                string SEATSTATUS = collection.AllKeys[0].ToString();  //Status
 
                 Session["SEATID"] = SEATID;
 
-                return Redirect("/Home/Filmticket");
+                bool STATUS = IIf(SEATSTATUS, true, false);
+
+                Session["SEATSTATUS"] = STATUS;
+
+                if (Convert.ToBoolean(Session["SEATSTATUS"]))
+                {
+                    Session["SEATBUSY"] = true;
+                    //ViewBag.inherit = "visibility-inherit";
+                    return Redirect("/Home/Filmseat");
+                }
+                else
+                {
+                    Session["SEATBUSY"] = false;
+                    return Redirect("/Home/Filmticket");
+                }
+        
             }
             else
             {
@@ -366,17 +386,21 @@ namespace CinemaWeb.Controllers
         [HttpPost]
         public ActionResult FilmticketFuncEnd(string txtFULNM, string txtEMAIL, string txtCARDNO, string txtCVC, string txtSTKDAY)
         {
+            DataSet dsTICKET = new DataSet();
             Session["ISSENDMAIL"] = false;
             //string ToEmailStr = collection[0].ToString();
+            string mailBody = "<body><head>Null</head></body>";
+            string mailtext = "";
             string ToEmailStr = txtEMAIL;
-            //string FILMID = Session["FILMID"].ToString();
+            string USRID = Session["USRIDv"].ToString();
+            string FILMID = Session["FILMID"].ToString();
             string FILMNM = GetFILMNM(Session["FILMID"].ToString());
             string FILMIMG = GetFILMIMG(Session["FILMID"].ToString());
-            //string HALLID = Session["HALLIDV"].ToString();
+            string HALLID = Session["HALLIDV"].ToString();
             string HALLNM = GetHALLNM(Session["HALLIDV"].ToString());
-            //string HALLTIMEID = Session["HALLTIMEIDV"].ToString();
+            string HALLTIMEID = Session["HALLTIMEIDV"].ToString();
             string HALLTIME = GetHALLTIME(Session["HALLTIMEIDV"].ToString());
-            //string SEATID = Session["SEATID"].ToString();
+            string SEATID = Session["SEATID"].ToString();
             string SEATNM = GetSEAT(Session["SEATID"].ToString());
 
             FILMIMG = "http://localhost:62405/images/film/" + FILMIMG.Substring(14);
@@ -384,56 +408,143 @@ namespace CinemaWeb.Controllers
             //inline.ContentId = Guid.NewGuid().ToString();
 
             //return Content("<script language='javascript' type='text/javascript'>alert('Save Successfully');</script>");  ////Alert Mesajı Göndermek için.
+            
+            try
+            {
+                using (DataVw dMan = new DataVw())
+                {
+                    dsTICKET = dMan.ExecuteView_S("TICKET", "*", "", "", "");
+                }
 
-            _Mail.ServerPort = 587;
-            _Mail.ServerSmtp = "smtp-mail.outlook.com";
-            _Mail.ServerUser = "samet.sahin.0122@hotmail.com";
-            _Mail.ServerUserPwd = "***";
-            _Mail.RequireAuthentication = true;
-            _Mail.BodyFormat = BodyFormat.Html;
+                DataRow newrow = dsTICKET.Tables[0].NewRow();
+                newrow["ID"] = Guid.NewGuid();
+                string ticketID = newrow["ID"].ToString().ToUpper();
+                newrow["FILMID"] = FILMID;
+                newrow["HALLID"] = HALLID;
+                newrow["HALLTIMEID"] = HALLTIMEID;
+                newrow["SEATID"] = SEATID;
+                newrow["USRID"] = USRID;
+                newrow["DATETIME"] = DateTime.Now;
+                newrow["EDATE"] = DateTime.Now;
+                //string xml = GetDashboardXml(mailBody);
+                //newrow["MAILBODY"] = xml;
+                //newrow["MAILTEXT"] = mailtext;
+                //newrow["EUSRID"] = null;
+                //newrow["UDATE"] = DateTime.Now;
+                //newrow["UUSRID"] = null;
+                newrow["NOTE"] = "En Son Kayıt İşlemi Gerçekleştirdi.";
+                AgentGc data = new AgentGc();
+                string insetInfo = data.DataAdded("TICKET", newrow, dsTICKET.Tables[0]);
 
-            StringBuilder mailTemplate = new StringBuilder();
+                if (insetInfo == "İşleminiz Tamamlandı..")
+                {
+                    using (DataVw dMan = new DataVw())
+                    {
+                        dsTICKET = dMan.ExecuteView_S("TICKET", "*", "", "", "");
+                    }
 
-            mailTemplate.Append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
-            mailTemplate.Append("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
-            mailTemplate.Append("<head>");
-            mailTemplate.Append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
-            mailTemplate.Append("<style type=\"text/css\">");
-            mailTemplate.Append(".template {");
-            mailTemplate.Append("font-family: Arial;");
-            mailTemplate.Append("font-size: 9.5pt;");
-            mailTemplate.Append("}");
-            mailTemplate.Append("</style>");
-            mailTemplate.Append("</style>");
-            mailTemplate.Append("</head>");
-            mailTemplate.Append("<body>");
-            mailTemplate.Append("<div style='margin-bottom: 10px; position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;'>");
-            mailTemplate.Append("<div style='display: inline-block;display: block;height: auto;max-width: 20%;padding: 4px;line-height: 1.428571429;background-color: #ffffff;border: 1px solid #dddddd;border-radius: 4px;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;'>");
-            mailTemplate.Append("<img src='" + FILMIMG + "' alt='film' style='display:block;height: auto;max-width: 100%; margin-right: auto;margin-left: auto;' />");
-            mailTemplate.Append("<div style='padding: 9px;color: #333333;'>");
-            mailTemplate.Append("<h3 style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 24px; margin: 0 0 10px;font-weight: 500;line-height: 1.1;' >Film : " + FILMNM + "</h3>");
-            mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Salon : " + HALLNM + "</p>");
-            mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Seans : " + HALLTIME + "</p>");
-            mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Koltuk : " + SEATNM + "</p>");
-            mailTemplate.Append("</div>");
-            mailTemplate.Append("<div style='padding: 9px;color: #333333;'>");
-            mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Iyi Seyirler :)</p>");
-            mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Biletiniz Tek Kullanimliktir.</p>");
-            mailTemplate.Append("</div>");
-            mailTemplate.Append("</div>");
-            mailTemplate.Append("</div>");
-            mailTemplate.Append("</body>");
-            mailTemplate.Append("</html>");
+                    BarcodeLib.Barcode barcode = new BarcodeLib.Barcode()
+                    {
+                        IncludeLabel = true, //Barkod Altındaki Yazı için 
+                        Alignment = BarcodeLib.AlignmentPositions.CENTER,
+                        Width = 800,
+                        Height = 100,
+                        RotateFlipType = RotateFlipType.RotateNoneFlipNone,
+                        BackColor = Color.White,
+                        ForeColor = Color.Black,
+                    };
+                    string barcodeNm = ticketID;
+                    Image img = barcode.Encode(BarcodeLib.TYPE.CODE128, barcodeNm.ToLower());
+                    string barcodeFilePath = string.Format("images/barcode/{0}.jpg", barcodeNm.ToLower());
+                    String saveImagePath = Server.MapPath("../") + barcodeFilePath;
 
-            _Mail.Body = mailTemplate.ToString(); //İçerik
-            _Mail.Subject = "Biletiniz."; //Konu
+                    //img = System.Drawing.Image.FromFile(HttpContext.Server.MapPath(barcodeFilePath));
+                    img.Save(saveImagePath);
 
-            _Mail.FromEmail = "samet.sahin.0122@hotmail.com"; //Gönderen
-            _Mail.ToEmail = ToEmailStr; //Alıcı
+                    _Mail.ServerPort = 587;
+                    _Mail.ServerSmtp = "smtp-mail.outlook.com";
+                    _Mail.ServerUser = "samet.sahin.0122@hotmail.com";
+                    _Mail.ServerUserPwd = "***";
+                    _Mail.RequireAuthentication = true;
+                    _Mail.BodyFormat = BodyFormat.Html;
 
-            _MailH.Send(_Mail);
+                    string mailBarcoImg = "http://localhost:62405/images/barcode/" + ticketID + ".jpg";
 
-            Session["ISSENDMAIL"] = true;
+                    StringBuilder mailTemplate = new StringBuilder();
+
+                    mailTemplate.Append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+                    mailTemplate.Append("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+                    mailTemplate.Append("<head>");
+                    mailTemplate.Append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />");
+                    mailTemplate.Append("<style type=\"text/css\">");
+                    mailTemplate.Append(".template {");
+                    mailTemplate.Append("font-family: Arial;");
+                    mailTemplate.Append("font-size: 9.5pt;");
+                    mailTemplate.Append("}");
+                    mailTemplate.Append("</style>");
+                    mailTemplate.Append("</style>");
+                    mailTemplate.Append("</head>");
+                    mailTemplate.Append("<body>");
+                    mailTemplate.Append("<div style='margin-bottom: 10px; position: relative;min-height: 1px;padding-right: 15px;padding-left: 15px;'>");
+                    mailTemplate.Append("<div style='display: inline-block;display: block;height: auto;max-width: 20%;padding: 4px;line-height: 1.428571429;background-color: #ffffff;border: 1px solid #dddddd;border-radius: 4px;-webkit-transition: all 0.2s ease-in-out;transition: all 0.2s ease-in-out;'>");
+                    mailTemplate.Append("<img src='" + FILMIMG + "' alt='film' style='display:block;height: auto;max-width: 100%; margin-right: auto;margin-left: auto;' />");
+                    mailTemplate.Append("<div style='padding: 9px;color: #333333;'>");
+                    mailTemplate.Append("<h3 style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 24px; margin: 0 0 10px;font-weight: 500;line-height: 1.1;' >Film : " + FILMNM + "</h3>");
+                    mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Salon : " + HALLNM + "</p>");
+                    mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Seans : " + HALLTIME + "</p>");
+                    mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Koltuk : " + SEATNM + "</p>");
+                    mailTemplate.Append("</div>");
+                    mailTemplate.Append("<div style='padding: 9px;color: #333333;'>");
+                    mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Iyi Seyirler :)</p>");
+                    mailTemplate.Append("<p style='font-family: Helvetica Neue,Helvetica,Arial,sans-serif; font-size: 14px; margin: 0 0 10px;' >Biletiniz Tek Kullanimliktir.</p>");
+                    mailTemplate.Append("</div>");
+                    mailTemplate.Append("<img src='" + mailBarcoImg + "' alt='barcode' style='display:block;height: auto;max-width: 100%; margin-right: auto;margin-left: auto;' />");
+                    mailTemplate.Append("</div>");
+                    mailTemplate.Append("</div>");
+                    mailTemplate.Append("</body>");
+                    mailTemplate.Append("</html>");
+
+                    //mailBody = GetDashboardXml(mailTemplate.ToString());
+                    mailBody = StrToByteArray(mailTemplate.ToString()).ToString();
+                    mailtext = mailTemplate.ToString();
+
+                    _Mail.Body = mailTemplate.ToString(); //İçerik
+                    _Mail.Subject = "Biletiniz."; //Konu
+
+                    _Mail.FromEmail = "samet.sahin.0122@hotmail.com"; //Gönderen
+                    _Mail.ToEmail = ToEmailStr; //Alıcı
+
+                    _MailH.Send(_Mail);
+                    Session["ISSENDMAIL"] = true;
+
+                    DataRow[] dr = dsTICKET.Tables[0].Select(string.Format("ID='{0}'", ticketID));
+                    if (dr.Length == 1)
+                    {
+                        string sql = "UPDATE TICKET SET MAILBODY=CAST('" + mailtext.Replace("'", "") + "' AS VARBINARY(MAX)) WHERE ID='" + ticketID + "'";
+                        using (DataManager dMan = new DataManager())
+                        {
+                            dMan.Excequte(sql);
+                        }
+                    }
+
+                    Session["TICKETSUCCESS"] = true;
+                    return Redirect("/Home/Filmticket");
+                }
+                else
+                {
+                    Session["TICKETSUCCESS"] = false;
+                    ViewBag.TICKETINFO = "Sistemsel Bir Hata Oluştu. Lütfen Daha Sonra Tekrar Deneyiniz.";
+                    return Redirect("/Home/Filmticket");
+                    //return Content("<script language='javascript' type='text/javascript'>alert('Sistemsel Bir Hata Oluştu. Lütfen Daha Sonra Tekrar Deneyiniz.');</script>");  ////Alert Mesajı Göndermek için.
+                }
+
+            }
+            catch (Exception)
+            {
+                Session["TICKETSUCCESS"] = false;
+                ViewBag.addmessage = "Sistemsel Bir Hata Oluştu. Lütfen Daha Sonra Tekrar Deneyiniz.";
+            }
+
             return Redirect("/Home/Filmticket");
         }
 
@@ -560,6 +671,27 @@ namespace CinemaWeb.Controllers
             SEATNM = dvSEAT[(int)result].Row["SEATNM"].ToString();
 
             return SEATNM;
+        }
+
+        public byte[] StrToByteArray(string str)
+        {
+            System.Text.ASCIIEncoding encoding = new System.Text.ASCIIEncoding();
+            return encoding.GetBytes(str);
+        }
+
+        #endregion
+
+        #region IIf
+
+        private bool IIf(string p1, bool p2, bool p3)
+        {
+            bool status = false;
+            if (p1 == "1"){
+                status = true;
+            }else{
+                status = false;
+            }
+            return status;
         }
 
         #endregion

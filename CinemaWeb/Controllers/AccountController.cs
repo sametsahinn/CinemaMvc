@@ -37,6 +37,27 @@ namespace CinemaWeb.Controllers
 
         #endregion
 
+        public class AdmUserList
+        {
+            public Guid ID { get; set; }
+            public string IS_AC { get; set; }
+            public string USRNM { get; set; }
+            public string PWD { get; set; }
+            public string FULNM { get; set; }
+            public string EMAIL { get; set; }
+            public string IS_SYSADM { get; set; }
+            public string IS_ADMIN { get; set; }
+            public string IS_HR { get; set; }
+            public string CHNG_PWD { get; set; }
+            public string AVATAR { get; set; }
+            public DateTime EDATE { get; set; }
+            public DateTime UDATE { get; set; }
+            public string CARDNO { get; set; }
+            public string CVC { get; set; }
+            public string STKDAY { get; set; }
+            public string STKMONTH { get; set; }
+        }
+
         public class UserList
         {
             public Guid ID { get; set; }
@@ -98,6 +119,45 @@ namespace CinemaWeb.Controllers
         }
 
 
+        //
+        // GET: /Account/
+        public ActionResult Users()
+        {
+            using (DataVw dMan = new DataVw())
+            {
+                dsUser = dMan.ExecuteView_S("USR", "*", "", "", "");
+            }
+
+            List<AdmUserList> AdmuserList = new List<AdmUserList>();
+            foreach (DataRow dr in dsUser.Tables[0].Rows)
+            {
+                AdmuserList.Add(new AdmUserList
+                {
+                    ID = (Guid)dr["ID"],
+                    IS_AC = dr["IS_AC"].ToString(),
+                    USRNM = dr["USRNM"].ToString(),
+                    PWD = CryptionHelper.Decrypt(dr["PWD"].ToString(), "tb"),
+                    EMAIL = dr["EMAIL"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    IS_SYSADM = dr["IS_SYSADM"].ToString(),
+                    IS_ADMIN = dr["IS_ADMIN"].ToString(),
+                    IS_HR = dr["IS_HR"].ToString(),
+                    CHNG_PWD = dr["CHNG_PWD"].ToString(),
+                    AVATAR = dr["AVATAR"].ToString(),
+                    EDATE = (DateTime)dr["EDATE"],
+                    UDATE = (DateTime)dr["UDATE"],
+                    CARDNO = dr["CARDNO"].ToString(),
+                    CVC = dr["CVC"].ToString(),
+                    STKDAY = dr["STKDAY"].ToString(),
+                    STKMONTH = dr["STKMONTH"].ToString()
+                });
+            }
+
+            ViewBag.UserList = AdmuserList;
+
+            return View();
+        }
+
         #region Control
 
         [HttpPost]
@@ -133,7 +193,7 @@ namespace CinemaWeb.Controllers
                     Session["admin"] = true;
                     Session["IsAuthenticated"] = true;
                     Session["IS_SYSADM"] = row["IS_SYSADM"].ToString();
-
+                    //await SignInAsync(user, model.RememberMe);
                     if (row["IS_SYSADM"].ToString() == "True")
                     {
                         Session["loginRoles"] = true;
@@ -198,14 +258,14 @@ namespace CinemaWeb.Controllers
                 dsUser = dMan.ExecuteView_S("USR", "*", "", "", "");
             }
 
-            if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "" || txtCARDNO.ToString() == "" || txtCVC.ToString() == "" || txtSTKDAY.ToString() == "" || txtSTKMONTH.ToString() == "")
-            {
-                Session["useraddsuccess"] = false;
-                ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
-                return Redirect("/Account/Register");
-            }
-            else
-            {
+            //if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "" || txtCARDNO.ToString() == "" || txtCVC.ToString() == "" || txtSTKDAY.ToString() == "" || txtSTKMONTH.ToString() == "")
+            //{
+            //    Session["useraddsuccess"] = false;
+            //    ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
+            //    return Redirect("/Account/Register");
+            //}
+            //else
+            //{
                 if (file != null)
                 {
                     string pic = System.IO.Path.GetFileName(file.FileName);
@@ -253,7 +313,7 @@ namespace CinemaWeb.Controllers
                 Session["useraddsuccess"] = true;
                 ViewBag.addmessageinfo = veri;
                 return Redirect("/Account/Login");
-            }
+           // }
         }
 
         #endregion
@@ -279,14 +339,14 @@ namespace CinemaWeb.Controllers
                 dsUser = dMan.ExecuteView_S("USR", "*", USRID, "", "ID = ");
             }
 
-            if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "" || txtCARDNO.ToString() == "" || txtCVC.ToString() == "" || txtSTKDAY.ToString() == "" || txtSTKMONTH.ToString() == "")
-            {
-                return Content("<script language='javascript' type='text/javascript'>alert('Eksik veri girişi! Tüm Alanları Doldurunuz.');</script>");  ////Alert Mesajı Göndermek için.
-                //ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
-                //return Redirect("/Account/Manage");
-            }
-            else
-            {
+            //if (txtUSRNM.ToString() == "" || txtFULNM.ToString() == "" || txtPWD.ToString() == "" || txtEMAIL.ToString() == "" || txtCARDNO.ToString() == "" || txtCVC.ToString() == "" || txtSTKDAY.ToString() == "" || txtSTKMONTH.ToString() == "")
+            //{
+            //    return Content("<script language='javascript' type='text/javascript'>alert('Eksik veri girişi! Tüm Alanları Doldurunuz.');</script>");  ////Alert Mesajı Göndermek için.
+            //    //ViewBag.addmessage = "Eksik veri girişi! Tüm Alanları Doldurunuz.";
+            //    //return Redirect("/Account/Manage");
+            //}
+            //else
+            //{
                 if (file != null)
                 {
                     string pic = System.IO.Path.GetFileName(file.FileName);
@@ -330,15 +390,17 @@ namespace CinemaWeb.Controllers
                 newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
                 AgentGc data = new AgentGc();
                 string veri = data.DataModified("USR", newrow, dsUser.Tables[0]);
-                return Content("<script language='javascript' type='text/javascript'>alert('" + veri + "');</script>");
+                //return Content("<script language='javascript' type='text/javascript'>alert('" + veri + "');</script>");
                 //ViewBag.addmessageinfo = veri;
-                //return Redirect("/Account/Manage");
-            }
-            return Redirect("/Account/Manage");
+                return Redirect("/Account/Manage");
+            //}
+            //return Redirect("/Account/Manage");
         }
 
         #endregion
-        
+
+        #region LogOff
+
         private IAuthenticationManager AuthenticationManager
         {
             get
@@ -353,8 +415,11 @@ namespace CinemaWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            AuthenticationManager.SignOut();
+            Session.Abandon();
+            //AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
-	}
+
+        #endregion
+    }
 }

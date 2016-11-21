@@ -9,6 +9,7 @@
     <form class="form-horizontal" method="post" action="/Home/HallTimeSelect">
         <div class="col-sm-6 col-md-4" style="margin-bottom: 10px; width: 100%;">
             <div class="thumbnail">
+                <hr class="colorgraph">
                 <img src="@Url.Content(@film.FILMIMG)" alt="film" />
                 <div class="caption">
                     <h3>@film.FILMNM</h3>
@@ -19,6 +20,7 @@
                 </div>
                 @foreach (var filmHallGroup in ViewBag.FilmHallGroup)
                 {
+                    <hr class="colorgraph">
                     <p>@filmHallGroup.Key</p>
                     
                     foreach (var filmInfo in ViewBag.FilmListInfo)
@@ -29,6 +31,7 @@
                             @*<p>@filmInfo.HALLTIME</p>*@
                             <p><button class="btn btn-success col-sm-offset-4" style="margin-left: 0;" name="@filmInfo.H2ID" value="@filmInfo.HID"><i class="fa fa-clock-o"></i> @filmInfo.HALLTIME</button></p>
                         </div>
+                    <hr class="colorgraph">
                         break;
                     }
                 }

@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "Seçilen Film";
+}
+
+<h2>Seçilen Film</h2>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="~/css/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script src="~/js/jquery-1.12.4.js"></script>
+<script src="~/js/jquery-ui.js"></script>
+<script>
+    $(function () {
+        $("#datepicker").datepicker({ dateFormat: 'yy-mm-dd' });
+    });
+</script>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Film Ekle</div>
+    <div class="panel-body">
+        @if (Convert.ToBoolean(Session["filmaddsuccess"]) == true)
+        {
+            Session["filmaddsuccess"] = false;
+            <div class="alert alert-info" role="alert">
+                <span class="glyphicon glyphicon-remove"></span>
+                <span class="sr-only">İnfo:</span>
+                Kayıt Edildi.
+            </div>
+        }
+        @*else
+            {
+                Session["filmaddsuccess"] = false;
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    <span class="sr-only">Error:</span>
+                    Eksik veri girişi! Tüm Alanları Doldurunuz.
+                </div>
+            };*@
+            @foreach (var filmİnfo in ViewBag.FilmListSelect)
+            {                
+                <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/FilmUpdateEndAction" style="width: 50%;margin: 0 auto;">
+                    <hr class="colorgraph">
+                    <div class="form-group">
+                        <label for="fulname" class="col-sm-4 control-label">Film Adı :</label>
+                        <input class="form-control col-xs-12" name="txtFILMNM" required="" autofocus="" value="@filmİnfo.FILMNM" placeholder="Film Adı" />
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="col-sm-4 control-label">Film Kategori :</label>
+                        @Html.DropDownList("FilmList", null, "Kategoriler", new { @class = "form-control", @value = @filmİnfo.FILMNM })
+                    </div>
+                    <div class='form-group'>
+                        <label for="username" class="col-sm-4 control-label">Vizyon Tarihi :</label>
+                        <input type='text' class="form-control" name="txtVISIONDATE" required="" value="@filmİnfo.VISIONDATE" placeholder="Vizyon Tarihi" id="datepicker" />
+                    </div>
+                    <div class="form-group">
+                        <label for="fulname" class="col-sm-4 control-label">Film Açıklama :</label>
+                        <textarea class="form-control" id="exampleTextarea" name="txtFILMEXPLANATION" required="" rows="3" placeholder="Film Açıklama">@filmİnfo.EXPLANATION</textarea>
+                        @*<input class="form-control col-xs-12" name="txtFILMEXPLANATION" placeholder="Film Açıklama" />*@
+                    </div>
+                    <div class="form-group">
+                        <label for="fulname" class="col-sm-4 control-label">Süre :</label>
+                        <input class="form-control col-xs-12" name="txtFILMTIME" required="" value="@filmİnfo.TIME" placeholder="Süre (dk)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="username" class="col-sm-4 control-label">Film Resim :</label>
+                        <input type="file" id="file" value="@filmİnfo.FILMIMG" name="file" />
+                    </div>
+                    <hr class="colorgraph">
+                    <button id="@filmİnfo.ID" class="btn btn-primary col-sm-offset-4" name="btnFilmID" value="@filmİnfo.ID"><i class="fa fa-check" aria-hidden="true"></i> Güncelle</button>
+                </form>
+            }
+    </div>
+</div>
+

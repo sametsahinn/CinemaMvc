@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "Seçilen Kategori";
+}
+
+<h2>Seçilen Kategori</h2>
+
+<div class="row">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Bilgilerinizi Güncelleyin</div>
+        <div class="panel-body">
+            @foreach (var filmTyp in ViewBag.FilmTypListSelect)
+{
+    <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/CategoryUpdateEndAction" style="width: 50%;margin: 0 auto;">
+        <hr class="colorgraph">
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Kategori Adı :</label>
+            <input class="form-control col-xs-12" name="txtFILMTYPNM" required="" autofocus="" placeholder="Kategori adı" value="@filmTyp.FILMTYPNM" />
+        </div>
+        <hr class="colorgraph">
+        <button id="@filmTyp.ID" class="btn btn-primary col-sm-offset-4" name="btnCatID" value="@filmTyp.ID"><i class="fa fa-check" aria-hidden="true"></i> Güncelle</button>
+    </form>
+}
+        </div>
+    </div>
+</div>

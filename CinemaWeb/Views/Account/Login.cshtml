@@ -14,15 +14,17 @@
                 Giriş yapılamadı!
             </div>
         }
-        <form class="form-horizontal" method="post" action="/Account/Control">
+        <form class="form-horizontal" method="post" action="/Account/Control" style="width: 50%;margin: 0 auto;">
+            <hr class="colorgraph">
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Kullanıcı Adı :</label>
-                <input class="form-control col-xs-12" name="txtUsername" placeholder="Kullanıcı adı" value="@Request.Form["username"]" />
+                <input class="form-control col-xs-12" name="txtUsername" required="" autofocus="" placeholder="Kullanıcı adı" value="@Request.Form["username"]" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Parola :</label>
-                <input class="form-control" name="txtPassword" type="password" placeholder="Parola" />
+                <input class="form-control" name="txtPassword" required="" type="password" placeholder="Parola" />
             </div>
+            <hr class="colorgraph">
             <button class="btn btn-success col-sm-offset-4">Giriş Yap</button>
         </form>
 

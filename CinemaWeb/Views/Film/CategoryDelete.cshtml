@@ -3,5 +3,31 @@
     ViewBag.Title = "Kategori Sil";
 }
 
+
 <h2>Kategori Sil</h2>
+
+<div class="row">
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th>Kategori</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var filmTyp in ViewBag.FilmTypList)
+            {
+                <tr>
+                    <form class="form-horizontal" method="post" action="/Film/CategoryDeleteAction">
+
+                        <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                        <td style="text-align: center; line-height: 50px;">@filmTyp.FILMTYPNM</td>
+                        <td style="text-align: center; line-height: 50px;"><button id="@filmTyp.ID" class="btn btn-danger col-sm-offset-4" style="margin: 0;" name="btnCategory" value="@filmTyp.ID"><i class="fa fa-times" aria-hidden="true"></i> Sil</button></td>
+                    </form>
+                </tr>
+           }
+        </tbody>
+    </table>
+ </div>
 

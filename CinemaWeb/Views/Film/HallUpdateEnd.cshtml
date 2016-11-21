@@ -1,0 +1,28 @@
+﻿
+@{
+    ViewBag.Title = "Seçilen Salon";
+}
+
+<h2>Seçilen Salon</h2>
+
+<div class="row">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Bilgilerinizi Güncelleyin</div>
+        <div class="panel-body">
+            @foreach (var hall in ViewBag.HallListSelect)
+{
+    <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/HallUpdateEndAction" style="width: 50%;margin: 0 auto;">
+        <hr class="colorgraph">
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Salon Adı :</label>
+            <input class="form-control col-xs-12" name="txtHALLNM" required="" autofocus="" placeholder="Salon adı" value="@hall.HALLNM" />
+        </div>
+        <hr class="colorgraph">
+        <button id="@hall.ID" class="btn btn-primary col-sm-offset-4" name="btnHallID" value="@hall.ID"><i class="fa fa-check" aria-hidden="true"></i> Güncelle</button>
+    </form>
+}
+        </div>
+    </div>
+</div>
+

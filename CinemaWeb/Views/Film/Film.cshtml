@@ -25,47 +25,48 @@
                 Kayıt Edildi.
             </div>
         }
-        else
+        @*else
         {
             Session["filmaddsuccess"] = false;
             <div class="alert alert-danger" role="alert">
                 <span class="glyphicon glyphicon-remove"></span>
                 <span class="sr-only">Error:</span>
-                @*@ViewBag.addmessage*@
                 Eksik veri girişi! Tüm Alanları Doldurunuz.
             </div>
-        };
-        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/FilmAdd">
+        };*@
+        <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/FilmAdd" style="width: 50%;margin: 0 auto;">
+            <hr class="colorgraph">
             <div class="form-group">
                 <label for="fulname" class="col-sm-4 control-label">Film Adı :</label>
-                <input class="form-control col-xs-12" name="txtFILMNM" placeholder="Film Adı" />
+                <input class="form-control col-xs-12" name="txtFILMNM" required="" autofocus="" placeholder="Film Adı" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Film Kategori :</label>
-                @Html.DropDownList("FilmList", null, "Kategoriler", new { @class = "form-control" })
+                @Html.DropDownList("FilmList", null, "Kategoriler", new { @class = "form-control", @required = "" })
             </div>
             <!--<div class="form-group">
-                <label for="EMAIL" class="col-sm-4 control-label">Salon :</label>
-                @*@Html.DropDownList("HallList", "Salonlar")*@
-                @Html.DropDownList("HallList", null, "Salonlar", new { @class = "form-control" })
-            </div>-->
+            <label for="EMAIL" class="col-sm-4 control-label">Salon :</label>
+            @*@Html.DropDownList("HallList", "Salonlar")*@
+            @Html.DropDownList("HallList", null, "Salonlar", new { @class = "form-control", @required = "" })
+        </div>-->
             <div class='form-group'>
                 <label for="username" class="col-sm-4 control-label">Vizyon Tarihi :</label>
-                <input type='text' class="form-control" name="txtVISIONDATE" placeholder="Vizyon Tarihi" id="datepicker" />
+                <input type='text' class="form-control" name="txtVISIONDATE" required="" placeholder="Vizyon Tarihi" id="datepicker" />
             </div>
             <div class="form-group">
                 <label for="fulname" class="col-sm-4 control-label">Film Açıklama :</label>
-                <textarea class="form-control" id="exampleTextarea" name="txtFILMEXPLANATION" rows="3" placeholder="Film Açıklama"></textarea>
+                <textarea class="form-control" id="exampleTextarea" name="txtFILMEXPLANATION" required="" rows="3" placeholder="Film Açıklama"></textarea>
                 @*<input class="form-control col-xs-12" name="txtFILMEXPLANATION" placeholder="Film Açıklama" />*@
             </div>
             <div class="form-group">
                 <label for="fulname" class="col-sm-4 control-label">Süre :</label>
-                <input class="form-control col-xs-12" name="txtFILMTIME" placeholder="Süre (dk)" />
+                <input class="form-control col-xs-12" name="txtFILMTIME" required="" placeholder="Süre (dk)" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Film Resim :</label>
-                <input type="file" id="file" name="file" />
+                <input type="file" id="file" required="" name="file" />
             </div>
+            <hr class="colorgraph">
             <button class="btn btn-success col-sm-offset-4">Filmi Kaydet</button>
         </form>
 

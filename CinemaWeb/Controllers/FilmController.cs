@@ -16,7 +16,46 @@ namespace CinemaWeb.Controllers
         public DataSet dsFilm = new DataSet();
         public DataSet dsFilmTyp = new DataSet();
         public DataSet dsHall = new DataSet();
-               
+        public DataSet dsFilmInfo = new DataSet();
+
+        #region Model
+
+        public class FilmList
+        {
+            public Guid ID { get; set; }
+            public string FILMNM { get; set; }
+            public string FILMIMG { get; set; }
+        }
+
+        public class FilmTypList
+        {
+            public Guid ID { get; set; }
+            public string FILMTYPNM { get; set; }
+        }
+
+        public class HallList
+        {
+            public Guid ID { get; set; }
+            public string HALLNM { get; set; }
+        }
+
+        public class FilmTypV
+        {
+            public Guid ID { get; set; }
+            public string FILMNM { get; set; }
+            public Guid FILMTYPID { get; set; }
+            public string FILMIMG { get; set; }
+            public DateTime VISIONDATE { get; set; }
+            public string TIME { get; set; }
+            public string EXPLANATION { get; set; }
+            public Guid F2ID { get; set; }
+            public string FILMTYPNM { get; set; }
+        }
+
+        #endregion
+
+        #region Film Operations
+
         //
         // GET: /Film/
         public ActionResult Film()
@@ -48,13 +87,169 @@ namespace CinemaWeb.Controllers
 
         public ActionResult FilmUpdate()
         {
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmInfo = dMan.ExecuteView_S("FILM_TYP_V", "*", "", "", "");
+            }
+
+            List<FilmTypV> FilmTypV = new List<FilmTypV>();
+            foreach (DataRow dr in dsFilmInfo.Tables[0].Rows)
+            {
+                FilmTypV.Add(new FilmTypV
+                {
+                    ID = (Guid)dr["ID"],
+                    FILMNM = dr["FILMNM"].ToString(),
+                    FILMTYPID = (Guid)dr["FILMTYPID"],
+                    FILMIMG = dr["FILMIMG"].ToString(),
+                    VISIONDATE = (DateTime)dr["VISIONDATE"],
+                    TIME = dr["TIME"].ToString(),
+                    EXPLANATION = dr["EXPLANATION"].ToString().Substring(0, 230),
+                    F2ID = (Guid)dr["F2ID"],
+                    FILMTYPNM = dr["FILMTYPNM"].ToString(),
+                });
+            }
+
+            ViewBag.FilmTypV = FilmTypV;
+
             return View();
+        }
+        public ActionResult FilmUpdateSelect(FormCollection collection)
+        {
+            string FILMID = collection["btnFilmID"];
+            Session["FILMID"] = FILMID;
+
+            return Redirect("/Film/FilmUpdateEnd");
+        }
+
+        public ActionResult FilmUpdateEnd()
+        {
+            string FILMID = Session["FILMID"].ToString();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmInfo = dMan.ExecuteView_S("FILM_TYP_V", "*", FILMID, "", "ID = ");
+                dsFilmTyp = dMan.ExecuteView_S("FILMTYP", "*", "", "", "");        
+            }
+
+            List<SelectListItem> filmList = new List<SelectListItem>();
+            foreach (DataRow dr in dsFilmTyp.Tables[0].Rows)
+            {
+                filmList.Add(new SelectListItem { Text = Convert.ToString(dr["FILMTYPNM"]), Value = dr["ID"].ToString() });
+            }
+
+            List<FilmTypV> FilmListSelect = new List<FilmTypV>();
+            foreach (DataRow dr in dsFilmInfo.Tables[0].Rows)
+            {
+                FilmListSelect.Add(new FilmTypV
+                {
+                    ID = (Guid)dr["ID"],
+                    FILMNM = dr["FILMNM"].ToString(),
+                    FILMTYPID = (Guid)dr["FILMTYPID"],
+                    FILMIMG = dr["FILMIMG"].ToString(),
+                    VISIONDATE = (DateTime)dr["VISIONDATE"],
+                    TIME = dr["TIME"].ToString(),
+                    EXPLANATION = dr["EXPLANATION"].ToString().Substring(0, 230),
+                    F2ID = (Guid)dr["F2ID"],
+                    FILMTYPNM = dr["FILMTYPNM"].ToString(),
+                });
+            }
+
+            ViewBag.FilmList = filmList;
+            ViewBag.FilmListSelect = FilmListSelect;
+
+            return View();
+        }
+        
+        public ActionResult FilmUpdateEndAction(string txtFILMNM, string txtFILMTYPID, string txtVISIONDATE, string txtFILMEXPLANATION, string txtFILMTIME, HttpPostedFileBase file, FormCollection collection)
+        {
+            string FILMID = Session["FILMID"].ToString();
+            string filmTypID = collection["FilmList"];
+            string filefo = "";
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilm = dMan.ExecuteView_S("FILM", "*", FILMID, "", "ID = ");
+            }
+
+            if (file != null)
+            {
+                string pic = System.IO.Path.GetFileName(file.FileName);
+                string path = System.IO.Path.Combine(Server.MapPath("~/images/film"), pic);
+                string pathd = "~/images/film/" + pic;
+                // file is uploaded
+                file.SaveAs(path);
+                filefo = pathd;
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    file.InputStream.CopyTo(ms);
+                    byte[] array = ms.GetBuffer();
+                }
+
+            }
+
+            DataRow newrow = dsFilm.Tables[0].Rows[0];
+            newrow["ID"] = FILMID;
+            newrow["FILMNM"] = txtFILMNM;
+            if (filmTypID == ""){
+                newrow["FILMTYPID"] = newrow["FILMTYPID"];
+            }else{
+                newrow["FILMTYPID"] = filmTypID;
+            }
+
+            if (filefo == ""){
+                newrow["FILMIMG"] = newrow["FILMIMG"];
+            }else{
+                newrow["FILMIMG"] = filefo;
+            }            
+            newrow["VISIONDATE"] = Convert.ToDateTime(txtVISIONDATE);
+            newrow["TIME"] = txtFILMTIME;
+            newrow["EXPLANATION"] = txtFILMEXPLANATION;
+            //newrow["EDATE"] = DateTime.Now;
+            //newrow["EUSRID"] = null;
+            newrow["UDATE"] = DateTime.Now;
+            //newrow["UUSRID"] = null;
+            newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("FILM", newrow, dsFilm.Tables[0]);
+
+            return Redirect("/Film/FilmUpdate");
         }
         
         public ActionResult FilmDelete()
         {
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilm = dMan.ExecuteView_S("FILM", "*", "", "", "");
+            }
+
+            List<FilmList> FilmList = new List<FilmList>();
+            foreach (DataRow dr in dsFilm.Tables[0].Rows)
+            {
+                FilmList.Add(new FilmList { ID = (Guid)dr["ID"], FILMNM = dr["FILMNM"].ToString(), FILMIMG = dr["FILMIMG"].ToString() });
+            }
+
+            ViewBag.FilmList = FilmList;
+
             return View();
         }
+
+        public ActionResult FilmDeleteAction(FormCollection collection)
+        {
+            string FILMID = collection["btnFilm"];
+
+            string sql = string.Format("DELETE FROM FILM WHERE ID ='{0}'", FILMID);
+            using (DataManager dMan = new DataManager())
+            {
+                int info = dMan.Excequte(sql);
+            }
+
+            return Redirect("/Film/FilmDelete");
+        }
+
+        #endregion
+
+        #region Hall Operations
 
         public ActionResult Hall()
         {
@@ -63,13 +258,107 @@ namespace CinemaWeb.Controllers
 
         public ActionResult HallUpdate()
         {
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmTyp = dMan.ExecuteView_S("HALL", "*", "", "", "");
+            }
+
+            List<HallList> HallList = new List<HallList>();
+            foreach (DataRow dr in dsFilmTyp.Tables[0].Rows)
+            {
+                HallList.Add(new HallList { ID = (Guid)dr["ID"], HALLNM = dr["HALLNM"].ToString() });
+            }
+
+            ViewBag.HallList = HallList;
+
             return View();
+        }
+
+        public ActionResult HallUpdateSelect(FormCollection collection)
+        {
+            string HALLID = collection["btnHallID"];
+            Session["HALLID"] = HALLID;
+            
+            return Redirect("/Film/HallUpdateEnd");
+        }
+
+        public ActionResult HallUpdateEnd()
+        {
+            string HALLID = Session["HALLID"].ToString();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmTyp = dMan.ExecuteView_S("HALL", "*", HALLID, "", "ID = ");
+            }
+
+            List<HallList> HallListSelect = new List<HallList>();
+            foreach (DataRow dr in dsFilmTyp.Tables[0].Rows)
+            {
+                HallListSelect.Add(new HallList { ID = (Guid)dr["ID"], HALLNM = dr["HALLNM"].ToString() });
+            }
+
+            ViewBag.HallListSelect = HallListSelect;
+
+            return View();
+        }
+
+        public ActionResult HallUpdateEndAction(string txtHALLNM, FormCollection collection)
+        {
+            string HALLID = Session["HALLID"].ToString();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsHall = dMan.ExecuteView_S("HALL", "*", HALLID, "", "ID = ");
+            }
+
+            DataRow newrow = dsHall.Tables[0].Rows[0];
+            newrow["ID"] = HALLID;
+            newrow["HALLNM"] = txtHALLNM;
+            //newrow["EDATE"] = DateTime.Now;
+            //newrow["EUSRID"] = null;
+            newrow["UDATE"] = DateTime.Now;
+            //newrow["UUSRID"] = null;
+            newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("HALL", newrow, dsHall.Tables[0]);
+
+            return Redirect("/Film/HallUpdate");
         }
 
         public ActionResult HallDelete()
         {
+            using (DataVw dMan = new DataVw())
+            {
+                dsHall = dMan.ExecuteView_S("HALL", "*", "", "", "");
+            }
+
+            List<HallList> HallList = new List<HallList>();
+            foreach (DataRow dr in dsHall.Tables[0].Rows)
+            {
+                HallList.Add(new HallList { ID = (Guid)dr["ID"], HALLNM = dr["HALLNM"].ToString() });
+            }
+
+            ViewBag.HallList = HallList;
+
             return View();
         }
+
+        public ActionResult HallDeleteAction(FormCollection collection)
+        {
+            string HALLID = collection["btnHall"];
+
+            string sql = string.Format("DELETE FROM HALL WHERE ID ='{0}'", HALLID);
+            using (DataManager dMan = new DataManager())
+            {
+                int info = dMan.Excequte(sql);
+            }
+
+            return Redirect("/Film/HallDelete");
+        }
+
+        #endregion
+
+        #region Category Operations
 
         public ActionResult Category()
         {
@@ -78,13 +367,120 @@ namespace CinemaWeb.Controllers
 
         public ActionResult CategoryUpdate()
         {
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmTyp = dMan.ExecuteView_S("FILMTYP", "*", "", "", "");
+            }
+
+            List<FilmTypList> FilmTypList = new List<FilmTypList>();
+            foreach (DataRow dr in dsFilmTyp.Tables[0].Rows)
+            {
+                FilmTypList.Add(new FilmTypList { ID = (Guid)dr["ID"], FILMTYPNM = dr["FILMTYPNM"].ToString() });
+            }
+
+            ViewBag.FilmTypList = FilmTypList;
+
             return View();
+        }
+
+        public ActionResult CategoryUpdateSelect(FormCollection collection)
+        {
+            string CATEGOTYID = collection["btnCategory"];
+            Session["CATEGOTYID"] = CATEGOTYID;
+            
+            return Redirect("/Film/CategoryUpdateEnd");
+        }
+
+        public ActionResult CategoryUpdateEnd() 
+        {
+            string CATEGOTYID = Session["CATEGOTYID"].ToString();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmTyp = dMan.ExecuteView_S("FILMTYP", "*", CATEGOTYID, "", "ID = ");
+            }
+
+            List<FilmTypList> FilmTypListSelect = new List<FilmTypList>();
+            foreach (DataRow dr in dsFilmTyp.Tables[0].Rows)
+            {
+                FilmTypListSelect.Add(new FilmTypList { ID = (Guid)dr["ID"], FILMTYPNM = dr["FILMTYPNM"].ToString() });
+            }
+
+            ViewBag.FilmTypListSelect = FilmTypListSelect;
+
+            return View();
+        }
+
+        public ActionResult CategoryUpdateEndAction(string txtFILMTYPNM, FormCollection collection)
+        {
+            string C = collection["btnCatID"];
+            string CATEGOTYID = Session["CATEGOTYID"].ToString();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmTyp = dMan.ExecuteView_S("FILMTYP", "*", CATEGOTYID, "", "ID = ");
+            }
+
+            DataRow newrow = dsFilmTyp.Tables[0].Rows[0];
+            newrow["ID"] = CATEGOTYID;
+            newrow["FILMTYPNM"] = txtFILMTYPNM;
+            //newrow["EDATE"] = DateTime.Now;
+            //newrow["EUSRID"] = null;
+            newrow["UDATE"] = DateTime.Now;
+            //newrow["UUSRID"] = null;
+            newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("FILMTYP", newrow, dsFilmTyp.Tables[0]);
+
+            return Redirect("/Film/CategoryUpdate");
         }
 
         public ActionResult CategoryDelete()
         {
+            using (DataVw dMan = new DataVw())
+            {
+                dsFilmTyp = dMan.ExecuteView_S("FILMTYP", "*", "", "", "");
+            }
+
+            List<FilmTypList> FilmTypList = new List<FilmTypList>();
+            foreach (DataRow dr in dsFilmTyp.Tables[0].Rows)
+            {
+                FilmTypList.Add(new FilmTypList { ID = (Guid)dr["ID"], FILMTYPNM = dr["FILMTYPNM"].ToString() });
+            }
+
+            ViewBag.FilmTypList = FilmTypList;
+
             return View();
         }
+
+        public ActionResult CategoryDeleteAction(FormCollection collection)
+        {
+            string CATEGOTYID = collection["btnCategory"];
+            //using (DataVw dMan = new DataVw())
+            //{
+            //    dsFilmTyp = dMan.ExecuteView_S("FILMTYP", "*", "", "", "");
+            //}
+            string sql = string.Format("DELETE FROM FILMTYP WHERE ID ='{0}'", CATEGOTYID);
+           
+            using (DataManager dMan = new DataManager())
+            {
+                int info = dMan.Excequte(sql);
+            }
+            
+            //DataRow[] dr = dsFilmTyp.Tables[0].Select(string.Format("ID='{0}'", CATEGOTYID));
+            //if (dr.Length == 1)
+            //{
+            //    DataRow drDelete = dr[0];
+            //    //dr[0].Delete();
+
+            //    AgentGc data = new AgentGc();
+            //    string veri = data.DataDeleted("FILMTYP", drDelete, dsFilmTyp.Tables[0]);
+            //}
+
+            return Redirect("/Film/CategoryDelete");
+        }
+
+        #endregion
 
 
         //http://getbootstrap.com/javascript/
