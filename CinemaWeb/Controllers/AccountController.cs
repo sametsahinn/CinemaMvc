@@ -37,6 +37,8 @@ namespace CinemaWeb.Controllers
 
         #endregion
 
+        #region Model
+
         public class AdmUserList
         {
             public Guid ID { get; set; }
@@ -71,6 +73,8 @@ namespace CinemaWeb.Controllers
             public string STKMONTH { get; set; }
         }
 
+        #endregion
+
         //
         // GET: /Account/
         public ActionResult Login()
@@ -84,6 +88,8 @@ namespace CinemaWeb.Controllers
         {
             return View();
         }
+
+        #region Manage
 
         //
         // GET: /Account/
@@ -118,6 +124,9 @@ namespace CinemaWeb.Controllers
             return View();
         }
 
+        #endregion
+
+        #region Users
 
         //
         // GET: /Account/
@@ -128,21 +137,29 @@ namespace CinemaWeb.Controllers
                 dsUser = dMan.ExecuteView_S("USR", "*", "", "", "");
             }
 
-            List<AdmUserList> AdmuserList = new List<AdmUserList>();
+            List<AdmUserList> admuserList = new List<AdmUserList>();
             foreach (DataRow dr in dsUser.Tables[0].Rows)
             {
-                AdmuserList.Add(new AdmUserList
+                string IS_AC, IS_SYSADM, IS_ADMIN, IS_HR, CHNG_PWD;
+
+                if (Convert.ToBoolean(dr["IS_AC"])) { IS_AC = "Evet"; } else { IS_AC = "Hayır"; }
+                if (Convert.ToBoolean(dr["IS_SYSADM"])) { IS_SYSADM = "Evet"; } else { IS_SYSADM = "Hayır"; }
+                if (Convert.ToBoolean(dr["IS_ADMIN"])) { IS_ADMIN = "Evet"; } else { IS_ADMIN = "Hayır"; }
+                if (Convert.ToBoolean(dr["IS_HR"])) { IS_HR = "Evet"; } else { IS_HR = "Hayır"; }
+                if (Convert.ToBoolean(dr["CHNG_PWD"])) { CHNG_PWD = "Evet"; } else { CHNG_PWD = "Hayır"; }
+
+                admuserList.Add(new AdmUserList
                 {
                     ID = (Guid)dr["ID"],
-                    IS_AC = dr["IS_AC"].ToString(),
+                    IS_AC = IS_AC,
                     USRNM = dr["USRNM"].ToString(),
                     PWD = CryptionHelper.Decrypt(dr["PWD"].ToString(), "tb"),
-                    EMAIL = dr["EMAIL"].ToString(),
                     FULNM = dr["FULNM"].ToString(),
-                    IS_SYSADM = dr["IS_SYSADM"].ToString(),
-                    IS_ADMIN = dr["IS_ADMIN"].ToString(),
-                    IS_HR = dr["IS_HR"].ToString(),
-                    CHNG_PWD = dr["CHNG_PWD"].ToString(),
+                    EMAIL = dr["EMAIL"].ToString(),
+                    IS_SYSADM = IS_SYSADM,
+                    IS_ADMIN = IS_ADMIN,
+                    IS_HR = IS_HR,
+                    CHNG_PWD = CHNG_PWD,
                     AVATAR = dr["AVATAR"].ToString(),
                     EDATE = (DateTime)dr["EDATE"],
                     UDATE = (DateTime)dr["UDATE"],
@@ -153,10 +170,37 @@ namespace CinemaWeb.Controllers
                 });
             }
 
-            ViewBag.UserList = AdmuserList;
+            ViewBag.UserList = admuserList;
 
             return View();
         }
+
+        public ActionResult UsersActive(System.Web.Mvc.FormCollection collection)
+        {
+            string USRID = collection["btnUsrId"];
+            int IS_AC;
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsUser = dMan.ExecuteView_S("USR", "*", USRID, "", "ID = ");
+            }
+
+            DataRow newrow = dsUser.Tables[0].Rows[0];
+            if (Convert.ToBoolean(newrow["IS_AC"])) { IS_AC = 0; } else{ IS_AC = 1; }
+            newrow["ID"] = USRID;
+            newrow["IS_AC"] = IS_AC;
+            //newrow["EDATE"] = DateTime.Now;
+            //newrow["EUSRID"] = null;
+            newrow["UDATE"] = DateTime.Now;
+            //newrow["UUSRID"] = null;
+            newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("USR", newrow, dsUser.Tables[0]);
+
+            return Redirect("/Account/Users");
+        }
+
+        #endregion
 
         #region Control
 
@@ -305,7 +349,7 @@ namespace CinemaWeb.Controllers
                 newrow["STKMONTH"] = txtSTKMONTH;
                 newrow["EDATE"] = DateTime.Now;
                 //newrow["EUSRID"] = null;
-                //newrow["UDATE"] = DateTime.Now;
+                newrow["UDATE"] = DateTime.Now;
                 //newrow["UUSRID"] = null;
                 newrow["NOTE"] = "En Son Kayıt İşlemi Gerçekleştirdi.";
                 AgentGc data = new AgentGc();

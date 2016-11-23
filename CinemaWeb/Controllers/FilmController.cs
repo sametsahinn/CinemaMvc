@@ -4,6 +4,9 @@ using OfficeAgent.Object;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -17,6 +20,7 @@ namespace CinemaWeb.Controllers
         public DataSet dsFilmTyp = new DataSet();
         public DataSet dsHall = new DataSet();
         public DataSet dsFilmInfo = new DataSet();
+        public DataSet dsTicketInfo = new DataSet();
 
         #region Model
 
@@ -52,6 +56,37 @@ namespace CinemaWeb.Controllers
             public string FILMTYPNM { get; set; }
         }
 
+        public class TicketInfo
+        {
+            public Guid ID { get; set; }
+            public Guid FILMID { get; set; }
+            public Guid HALLID { get; set; }
+            public Guid HALLTIMEID { get; set; }
+            public Guid SEATID { get; set; }
+            public Guid USRID { get; set; }
+            public DateTime DATETIME { get; set; }
+            public Guid FID { get; set; }
+            public string FILMNM { get; set; }
+            public string FILMIMG { get; set; }
+            //public Guid FILMTYPID { get; set; }
+            public DateTime VISIONDATE { get; set; }
+            public string TIME { get; set; }
+            public string EXPLANATION { get; set; }
+            public Guid HID { get; set; }
+            public string HALLNM { get; set; }
+            public Guid HTID { get; set; }
+            public string HALLTIME { get; set; }
+            public Guid SID { get; set; }
+            public string SEATNM { get; set; }
+            //public Guid SHALLID { get; set; }
+            //public Boolean STATUS { get; set; }
+            public Guid UID { get; set; }
+            public string USRNM { get; set; }
+            public string FULNM { get; set; }
+            //public string PWD { get; set; }
+            public string AVATAR { get; set; }
+        }
+        
         #endregion
 
         #region Film Operations
@@ -482,10 +517,52 @@ namespace CinemaWeb.Controllers
 
         #endregion
 
+        #region FilmTicketProcess
 
-        //http://getbootstrap.com/javascript/
-        //https://www.tutorialspoint.com/bootstrap/bootstrap_thumbnails.htm
+        public ActionResult FilmTicketProcess()
+        {
+            using (DataVw dMan = new DataVw())
+            {
+                dsTicketInfo = dMan.ExecuteView_S("TICKETINFO_V", "*", "", "", "");
+            }
 
+            List<TicketInfo> ticketInfoList = new List<TicketInfo>();
+            foreach (DataRow dr in dsTicketInfo.Tables[0].Rows)
+            {
+                ticketInfoList.Add(new TicketInfo { 
+                        ID = (Guid)dr["ID"], 
+                        FILMID = (Guid)dr["FILMID"], 
+                        HALLID = (Guid)dr["HALLID"],
+                        HALLTIMEID = (Guid)dr["HALLTIMEID"],
+                        SEATID = (Guid)dr["SEATID"],
+                        USRID = (Guid)dr["USRID"],
+                        DATETIME = (DateTime)dr["DATETIME"],
+                        FID = (Guid)dr["FID"],
+                        FILMNM = dr["FILMNM"].ToString(),
+                        FILMIMG = dr["FILMIMG"].ToString(),
+                        VISIONDATE = (DateTime)dr["VISIONDATE"],
+                        TIME = dr["TIME"].ToString(),
+                        EXPLANATION = dr["EXPLANATION"].ToString(),
+                        HID = (Guid)dr["HID"],
+                        HALLNM = dr["HALLNM"].ToString(),
+                        HTID = (Guid)dr["HTID"],
+                        HALLTIME = dr["HALLTIME"].ToString(),
+                        SID = (Guid)dr["SID"],
+                        SEATNM = dr["SEATNM"].ToString(),
+                        UID = (Guid)dr["UID"],
+                        USRNM = dr["USRNM"].ToString(),
+                        FULNM = dr["FULNM"].ToString(),
+                        AVATAR = dr["AVATAR"].ToString()
+                });
+            }
+            
+            ViewBag.TicketInfoList = ticketInfoList;
+
+            return View();
+        }
+
+        #endregion
+        
         #region FilmAdd
 
         [HttpPost]
@@ -516,9 +593,21 @@ namespace CinemaWeb.Controllers
                     // file is uploaded
                     file.SaveAs(path);
                     filefo = pathd;
+                    
+                    //Image img = System.Drawing.Image.FromFile(pathd);
+                    //Image img2 = ResizeImage(img, 190, 273);
 
                     using (MemoryStream ms = new MemoryStream())
                     {
+                        /////***********************************  Test Edilecek. ***********************************
+
+                        //using (Image img = System.Drawing.Image.FromStream(ms))
+                        //using (var newImage = ResizeImage(img, 190, 273))
+                        //{
+                        //    //Image img2 = ResizeImage(img, 190, 273);
+                        //    newImage.Save(pathd, ImageFormat.Jpeg);
+                        //}
+
                         file.InputStream.CopyTo(ms);
                         byte[] array = ms.GetBuffer();
                     }
@@ -548,7 +637,7 @@ namespace CinemaWeb.Controllers
         }
 
         #endregion
-
+        
         #region FilmTypAdd
 
         [HttpPost]
@@ -624,5 +713,37 @@ namespace CinemaWeb.Controllers
         }
 
         #endregion
+
+        #region ResizeImage Func
+
+        public static Image ResizeImage(Image image, int width, int height)
+        {
+            var destRect = new Rectangle(0, 0, width, height);
+            var destImage = new Bitmap(width, height);
+
+            destImage.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using (var graphics = Graphics.FromImage(destImage))
+            {
+                graphics.CompositingMode = CompositingMode.SourceCopy;
+                graphics.CompositingQuality = CompositingQuality.HighQuality;
+                graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = SmoothingMode.HighQuality;
+                graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+                using (var wrapMode = new ImageAttributes())
+                {
+                    wrapMode.SetWrapMode(WrapMode.TileFlipXY);
+                    graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, wrapMode);
+                }
+            }
+
+            return destImage;
+        }
+
+        #endregion
+
+        //http://getbootstrap.com/javascript/
+        //https://www.tutorialspoint.com/bootstrap/bootstrap_thumbnails.htm
     }
 }

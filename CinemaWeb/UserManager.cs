@@ -48,7 +48,8 @@ namespace OfficeAgent
 
             using (DataManager dMan = new DataManager())
             {
-                sql = "SELECT * FROM USR WHERE USRNM=@USRNM And PWD=@PWD";
+                sql = "SELECT * FROM USR WHERE USRNM=@USRNM AND PWD=@PWD";
+                //sql = "SELECT * FROM USR WHERE USRNM=@USRNM AND PWD=@PWD" AND IS_AC = 1;
                 sPar.Add(new SqlParameter("USRNM", _userId));
                 //sPar.Add(new SqlParameter("UserPwd", _userPwd));
                 sPar.Add(new SqlParameter("PWD", CryptionHelper.Encrypt(_userPwd, "tb")));

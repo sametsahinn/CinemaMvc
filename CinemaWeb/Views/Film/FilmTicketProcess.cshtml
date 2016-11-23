@@ -1,0 +1,51 @@
+﻿
+@{
+    ViewBag.Title = "Alınmş Biletler";
+}
+
+<h2>Alınmış Biletler</h2>
+
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+    <div class="row">
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th>Film Adı</th>
+                <th>Salon Adı</th>
+                <th>Seans</th>
+                <th>Koltuk Numarası</th>
+                <th>Alınan Tarih</th>
+                <th>Alan Kişi</th>
+                @*<th></th>*@
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ticketInfo in ViewBag.TicketInfoList)
+            {
+                <tr>
+                    <form class="form-horizontal" method="post" action="/Film/**">
+                        <th style="text-align: center; line-height: 255px;" scope="row">1</th>
+                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@ticketInfo.FILMIMG)" style="width: 150px;height: 200px;" alt="avatar" /> <br /> @ticketInfo.FILMNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.HALLNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.HALLTIME</td>
+                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.SEATNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.DATETIME.ToString("dd.MM.yyyy")</td>
+                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@ticketInfo.AVATAR)" alt="avatar" /> <br /> @ticketInfo.FULNM</td>
+                    </form>
+                </tr>
+           }
+        </tbody>
+    </table>
+ </div>
+}
+    
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span class="sr-only">Error:</span>
+        Yetkiniz Yok.
+    </div>
+}
