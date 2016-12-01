@@ -2,6 +2,13 @@
     ViewBag.Title = "Kayıt Ol";
 }
 
+<script src="~/js/jquery-mask.js"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#txtCARDNO").mask("9999-9999-9999-9999");
+    });
+</script>
+
 <div class="panel panel-default">
     <div class="panel-heading">Giriş Yapın</div>
     <div class="panel-body">
@@ -43,19 +50,19 @@
             </div>
             <div class="form-group">
                 <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
-                <input class="form-control" name="txtCARDNO" required="" placeholder="Kart No" />
+                <input class="form-control" id="txtCARDNO" name="txtCARDNO" maxlength="16" required="" placeholder="Kart No" />
             </div>
             <div class="form-group">
                 <label for="CVC" class="col-sm-4 control-label">CVC :</label>
-                <input class="form-control" name="txtCVC" required="" placeholder="CVC" />
+                <input class="form-control" name="txtCVC" maxlength="3" required="" placeholder="CVC" />
             </div>
             <div class="form-group">
                 <label for="STKDAY" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                <input class="form-control" name="txtSTKDAY" required="" placeholder="Gün" />
+                <input class="form-control" name="txtSTKDAY" maxlength="2" required="" placeholder="Gün" />
             </div>
             <div class="form-group">
                 <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-                <input class="form-control" name="txtSTKMONTH" required="" placeholder="Ay" />
+                <input class="form-control" name="txtSTKMONTH" maxlength="2" required="" placeholder="Ay" />
             </div>
             <div class="form-group">
                 <label for="username" class="col-sm-4 control-label">Profil :</label>

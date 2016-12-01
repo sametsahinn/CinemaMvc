@@ -5,6 +5,8 @@
 
 <h2>Film Sil</h2>
 
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
 <div class="row">
     <table class="table table-bordered">
         <thead class="thead-inverse">
@@ -16,12 +18,14 @@
             </tr>
         </thead>
         <tbody>
+            @{int count = 0;}
             @foreach (var film in ViewBag.FilmList)
             {
+                count++;
                 <tr>
                     <form class="form-horizontal" method="post" action="/Film/FilmDeleteAction">
 
-                        <th style="text-align: center; line-height: 290px;" scope="row">1</th>
+                        <th style="text-align: center; line-height: 290px;">@count</th>
                         <td style="text-align: center; line-height: 290px;"><img src="@Url.Content(@film.FILMIMG)" alt="avatar" /></td>
                         <td style="text-align: center; line-height: 290px;">@film.FILMNM</td>
                         <td style="text-align: center; line-height: 290px;"><button id="@film.ID" cl class="btn btn-danger col-sm-offset-4" style="margin: 0;" name="btnFilm" value="@film.ID"><i class="fa fa-times" aria-hidden="true"></i> Sil</button></td>
@@ -31,4 +35,13 @@
         </tbody>
     </table>
 </div>
+
+}
+else {
+<div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-remove"></span>
+    <span class="sr-only">Error:</span>
+    Yetkiniz Yok.
+</div>
+}
 

@@ -106,7 +106,7 @@ namespace CinemaWeb.Controllers
             //ViewBag.inherit = "visibility-hidden";
             //Session["USRID"] = "";
             Session["SEATBUSY"] = false;
-            Session["TICKETSUCCESS"] = false;
+            Session["TICKETSUCCESS"] = true;
 
             using (DataVw dMan = new DataVw())
             {

@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = "Veri İşlemleri";
+}
+
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+    <h2>Kayıt ve Güncelleştirme İşlemleri</h2>
+    <hr class="colorgraph">
+    <ul class="nav nav-pills">
+        <li class="active">
+            <a href="#1a" data-toggle="tab">Film İşlmeleri</a>
+        </li>
+        <li>
+            <a href="#2a" data-toggle="tab">Salon İşlemleri</a>
+        </li>
+        <li>
+            <a href="#3a" data-toggle="tab">Kategori İşlemleri</a>
+        </li>
+    </ul>
+    <hr class="colorgraph">
+    <div class="tab-content clearfix">
+        <div class="tab-pane active" id="1a">
+            <br />
+            <table class="table table-bordered">
+                <thead class="thead-inverse">
+                    <tr>
+                        <th>#</th>
+                        <th>LOG IP</th>
+                        <th>LOG Tarihi</th>
+                        <th>LOG Kullanıcı</th>
+                        <th>LOG Film</th>
+                        <!--<th>img</th>-->
+                        <th>LOG Açıklama</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int count = 0;}
+                    @foreach (var logtableFilm in ViewBag.LogtableFilm)
+                    {
+                        count++;
+                        <tr>
+                            <th style="text-align: center; line-height: 50px;">@count</th>
+                            <td style="text-align: center; line-height: 50px;">@logtableFilm.LOGIP</td>
+                            <td style="text-align: center; line-height: 50px;">@logtableFilm.EDATE.ToString("dd.MM.yyyy")</td>
+                            <td style="text-align: center; line-height: 50px;">@logtableFilm.FULNM</td>
+                            <td style="text-align: center; line-height: 50px;">@logtableFilm.FILMNM</td>
+                            <!--<td style="text-align: center; line-height: 50px;">@logtableFilm.FILMIMG</td>-->
+                            <td style="text-align: center; line-height: 50px;">@logtableFilm.NOTE</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="2a">
+            <div class="tab-pane active" id="2a">
+                <br />
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            <th>LOG IP</th>
+                            <th>LOG Tarihi</th>
+                            <th>LOG Kullanıcı</th>
+                            <th>LOG Salon</th>
+                            <th>LOG Açıklama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{int countHall = 0;}
+                        @foreach (var logtableHall in ViewBag.LogtableHall)
+                        {
+                            countHall++;
+                            <tr>
+                                <th style="text-align: center; line-height: 50px;">@countHall</th>
+                                <td style="text-align: center; line-height: 50px;">@logtableHall.LOGIP</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableHall.EDATE.ToString("dd.MM.yyyy")</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableHall.FULNM</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableHall.HALLNM</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableHall.NOTE</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tab-pane" id="3a">
+            <div class="tab-pane active" id="3a">
+                <br />
+                <table class="table table-bordered">
+                    <thead class="thead-inverse">
+                        <tr>
+                            <th>#</th>
+                            <th>LOG IP</th>
+                            <th>LOG Tarihi</th>
+                            <th>LOG Kullanıcı</th>
+                            <th>LOG Kategori</th>
+                            <th>LOG Açıklama</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{int countFilmTyp = 0;}
+                        @foreach (var logtableFilmTyp in ViewBag.LogtableFilmTyp)
+                        {
+                            countFilmTyp++;
+                            <tr>
+                                <th style="text-align: center; line-height: 50px;">@countFilmTyp</th>
+                                <td style="text-align: center; line-height: 50px;">@logtableFilmTyp.LOGIP</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableFilmTyp.EDATE.ToString("dd.MM.yyyy")</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableFilmTyp.FULNM</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableFilmTyp.FILMTYPNM</td>
+                                <td style="text-align: center; line-height: 50px;">@logtableFilmTyp.NOTE</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+                <span class="glyphicon glyphicon-remove"></span>
+                <span class="sr-only">Error:</span>
+                Yetkiniz Yok.
+            </div>
+}
+
+

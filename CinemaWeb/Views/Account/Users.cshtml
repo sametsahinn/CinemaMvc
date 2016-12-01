@@ -31,11 +31,13 @@
                 </tr>
             </thead>
             <tbody>
+                @{int count = 0;}
                 @foreach (var user in ViewBag.UserList)
                 {
+                    count++;
                     <tr>
                         <form class="form-horizontal" method="post" action="/Account/UsersActive">
-                            <th style="text-align: center; line-height: 183px;" scope="row">1</th>
+                            <th style="text-align: center; line-height: 183px;">@count</th>
                             <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@user.AVATAR)" alt="avatar" /> <br /> @user.FULNM</td>
                             <td style="text-align: center; line-height: 183px;">@user.IS_AC</td>
                             <td style="text-align: center; line-height: 183px;">@user.USRNM</td>

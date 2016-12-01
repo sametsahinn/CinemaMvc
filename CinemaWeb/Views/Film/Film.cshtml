@@ -13,6 +13,8 @@
         });
     </script>
 
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
 <div class="panel panel-default">
     <div class="panel-heading">Film Ekle</div>
     <div class="panel-body">
@@ -73,3 +75,12 @@
         @*@Html.Partial("Counter")*@
     </div>
 </div>
+
+}
+else {
+<div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-remove"></span>
+    <span class="sr-only">Error:</span>
+    Yetkiniz Yok.
+</div>
+}

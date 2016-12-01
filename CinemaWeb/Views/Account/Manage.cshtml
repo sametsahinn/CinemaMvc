@@ -3,6 +3,13 @@
     ViewBag.Title = "Manage";
 }
 
+<script src="~/js/jquery-mask.js"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $("#txtCARDNO").mask("9999-9999-9999-9999");
+    });
+</script>
+
 <div class="row">
     <div class="col-lg-6 col-lg-offset-3" style="margin: 0 0 50px 0;">
         <div class="row">
@@ -34,12 +41,14 @@
         </thead>
         <tbody>
             <tr>
+                @{int count = 0;}
                 <form class="form-horizontal" method="post" action="/Account/SelectUserInfo">
                     @foreach (var user in ViewBag.UserList)
                     {
-                        <th style="text-align: center; line-height: 50px;" scope="row">1</th>
+                        count++;
+                        <th style="text-align: center; line-height: 50px;">@count</th>
                         <td style="text-align: center; line-height: 50px;">@user.USRNM</td>
-                        <td style="text-align: center; line-height: 50px;">1</td>
+                        <td style="text-align: center; line-height: 50px;">@user.PWD</td>
                         <td style="text-align: center; line-height: 50px;">@user.FULNM</td>
                         <td style="text-align: center; line-height: 50px;">@user.EMAIL</td>
                         <td style="text-align: center; line-height: 50px;">@user.CARDNO</td>
@@ -79,19 +88,19 @@
         </div>
         <div class="form-group">
             <label for="CARDNO" class="col-sm-4 control-label">Kart No :</label>
-            <input class="form-control" name="txtCARDNO" required="" placeholder="Kart No" value="@user.CARDNO" />
+            <input class="form-control" id="txtCARDNO" name="txtCARDNO" maxlength="16" required="" placeholder="Kart No" value="@user.CARDNO" />
         </div>
         <div class="form-group">
             <label for="CVC" class="col-sm-4 control-label">CVC :</label>
-            <input class="form-control" name="txtCVC" required="" placeholder="CVC" value="@user.CVC" />
+            <input class="form-control" name="txtCVC" required="" maxlength="3" placeholder="CVC" value="@user.CVC" />
         </div>
         <div class="form-group">
             <label for="STKDAY" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-            <input class="form-control" name="txtSTKDAY" required="" placeholder="Gün" value="@user.STKDAY" />
+            <input class="form-control" name="txtSTKDAY" maxlength="2" required="" placeholder="Gün" value="@user.STKDAY" />
         </div>
         <div class="form-group">
             <label for="STKMONTH" class="col-sm-4 control-label">Son Kullanma Tarihi :</label>
-            <input class="form-control" name="txtSTKMONTH" required="" placeholder="Ay" value="@user.STKMONTH" />
+            <input class="form-control" name="txtSTKMONTH" maxlength="2" required="" placeholder="Ay" value="@user.STKMONTH" />
         </div>
         <div class="form-group">
             <label for="username" class="col-sm-4 control-label">Profil :</label>

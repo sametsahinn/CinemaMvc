@@ -51,6 +51,11 @@
                                 <i class="fa fa-align-justify fa-3x"></i><br> <small>Kategori Kayıt</small>
                             </a>
                         </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("Seance", "Film")">
+                                <i class="fa fa-align-justify fa-3x"></i><br> <small>Seans Ayarla</small>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="tab-pane" id="2a">
@@ -97,18 +102,28 @@
                     <br />
                     <div class="row margin">
                         <div class="col-sm-4">
-                            <a class="btn btn-block btn-default" href="@Url.Action("Index","Categories")">
+                            <a class="btn btn-block btn-default" href="@Url.Action("FilmTicketProcess", "Film")">
                                 <i class="fa fa-credit-card fa-3x"></i><br> <small>İşlemler</small>
                             </a>
                         </div>
                         <div class="col-sm-4">
                             <a class="btn btn-block btn-default" href="@Url.Action("Users", "Account")">
-                                <i class="fa fa-user fa-3x"></i><br> <small>Kullanıcılar</small>
+                                <i class="fa fa-users fa-3x"></i><br> <small>Kullanıcılar</small>
                             </a>
                         </div>
                         <div class="col-sm-4">
                             <a class="btn btn-block btn-default" href="@Url.Action("Index","UserTypes")">
-                                <i class="fa fa-group fa-3x"></i><br> <small>Rapor</small>
+                                <i class="fa fa-tachometer fa-3x"></i><br> <small>Rapor</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("LogError", "Account")">
+                                <i class="fa fa-group fa-3x"></i><br> <small>Hatalı Girişler</small>
+                            </a>
+                        </div>
+                        <div class="col-sm-4">
+                            <a class="btn btn-block btn-default" href="@Url.Action("LogTable", "Account")">
+                                <i class="fa fa-database fa-3x"></i><br> <small>Veri İşlemleri</small>
                             </a>
                         </div>
                     </div>

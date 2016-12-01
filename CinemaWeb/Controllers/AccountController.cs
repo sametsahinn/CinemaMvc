@@ -24,6 +24,11 @@ namespace CinemaWeb.Controllers
     public class AccountController : Controller
     {
         public DataSet dsUser = new DataSet();
+        public DataSet dsLogError = new DataSet();
+        public DataSet dsLogTableFilm = new DataSet();
+        public DataSet dsLogTableHall = new DataSet();
+        public DataSet dsLogTableFilmTyp = new DataSet();
+        public DataSet dsUserTransactions = new DataSet();
         public static User UserData;
 
         #region LoginInfo Class Çağır
@@ -71,6 +76,96 @@ namespace CinemaWeb.Controllers
             public string CVC { get; set; }
             public string STKDAY { get; set; }
             public string STKMONTH { get; set; }
+        }
+        
+        public class Logerror
+        {
+            public Guid ID { get; set; }
+            public string LOGINFO { get; set; }
+            public string LOGIP { get; set; }
+            public DateTime LOGDATE { get; set; }
+            public DateTime EDATE { get; set; }
+            public string EUSRID { get; set; }
+            public DateTime UDATE { get; set; }
+            public string UUSRID { get; set; }
+            public string NOTE { get; set; }
+        }
+
+        public class LogtableFilm
+        {
+            public Guid ID { get; set; }
+            public string LOGTABLE { get; set; }
+            public Guid LOGTABLEID { get; set; }
+            public string LOGIP { get; set; }
+            public string FULNM { get; set; }
+            public string FILMNM { get; set; }
+            public string FILMIMG { get; set; }
+            public DateTime EDATE { get; set; }
+            public string EUSRID { get; set; }
+            public DateTime UDATE { get; set; }
+            public string UUSRID { get; set; }
+            public string NOTE { get; set; }
+        }
+
+        public class LogtableHall
+        {
+            public Guid ID { get; set; }
+            public string LOGTABLE { get; set; }
+            public Guid LOGTABLEID { get; set; }
+            public string LOGIP { get; set; }
+            public string FULNM { get; set; }
+            public string HALLNM { get; set; }
+            public DateTime EDATE { get; set; }
+            public string EUSRID { get; set; }
+            public DateTime UDATE { get; set; }
+            public string UUSRID { get; set; }
+            public string NOTE { get; set; }
+        }
+
+        public class LogtableFilmTyp
+        {
+             public Guid ID { get; set; }
+            public string LOGTABLE { get; set; }
+            public Guid LOGTABLEID { get; set; }
+            public string LOGIP { get; set; }
+            public string FULNM { get; set; }
+            public string FILMTYPNM { get; set; }
+            public DateTime EDATE { get; set; }
+            public string EUSRID { get; set; }
+            public DateTime UDATE { get; set; }
+            public string UUSRID { get; set; }
+            public string NOTE { get; set; }
+        }
+
+        public class UserTransactions
+        {
+            public Guid ID { get; set; }
+            public Guid FILMID { get; set; }
+            public Guid HALLID { get; set; }
+            public Guid HALLTIMEID { get; set; }
+            public Guid SEATID { get; set; }
+            public Guid USRID { get; set; }
+            public DateTime DATETIME { get; set; }
+            public Guid FID { get; set; }
+            public string FILMNM { get; set; }
+            public string FILMIMG { get; set; }
+            //public Guid FILMTYPID { get; set; }
+            public DateTime VISIONDATE { get; set; }
+            public string TIME { get; set; }
+            public string EXPLANATION { get; set; }
+            public Guid HID { get; set; }
+            public string HALLNM { get; set; }
+            public Guid HTID { get; set; }
+            public string HALLTIME { get; set; }
+            public Guid SID { get; set; }
+            public string SEATNM { get; set; }
+            //public Guid SHALLID { get; set; }
+            //public Boolean STATUS { get; set; }
+            public Guid UID { get; set; }
+            public string USRNM { get; set; }
+            public string FULNM { get; set; }
+            //public string PWD { get; set; }
+            public string AVATAR { get; set; }
         }
 
         #endregion
@@ -213,6 +308,7 @@ namespace CinemaWeb.Controllers
             using (DataVw dMan = new DataVw())
             {
                 dsUser = dMan.ExecuteView_S("USR", "*", txtUsername, "", "USRNM =");
+                dsLogError = dMan.ExecuteView_S("LOGERROR", "*", "", "", "");
             }
 
             if (dsUser.Tables[0].Rows.Count > 0)
@@ -271,6 +367,19 @@ namespace CinemaWeb.Controllers
                     return Redirect("/Home/Index");
                 }
 
+                DataRow newrow = dsLogError.Tables[0].NewRow();
+                newrow["ID"] = Guid.NewGuid();
+                newrow["LOGINFO"] = "Kullanıcı adı : " + txtUsername + " " + "Parola : " + txtPassword;
+                newrow["LOGIP"] = GetIp();
+                newrow["LOGDATE"] = DateTime.Now;
+                newrow["EDATE"] = DateTime.Now;
+                //newrow["EUSRID"] = null;
+                newrow["UDATE"] = DateTime.Now;
+                //newrow["UUSRID"] = null;
+                newrow["NOTE"] = "Parolaya Bağlı Hatalı Giriş.";
+                AgentGc data = new AgentGc();
+                string veri = data.DataAdded("LOGERROR", newrow, dsLogError.Tables[0]);
+
                 Session["loginFailed"] = true;
                 Session["IsAuthenticated"] = false;
 
@@ -284,6 +393,19 @@ namespace CinemaWeb.Controllers
             }
             else
             {
+                DataRow newrow = dsLogError.Tables[0].NewRow();
+                newrow["ID"] = Guid.NewGuid();
+                newrow["LOGINFO"] = "Kullanıcı adı : " + txtUsername + " " + "Parola : " + txtPassword;
+                newrow["LOGIP"] = GetIp();
+                newrow["LOGDATE"] = DateTime.Now;
+                newrow["EDATE"] = DateTime.Now;
+                //newrow["EUSRID"] = null;
+                newrow["UDATE"] = DateTime.Now;
+                //newrow["UUSRID"] = null;
+                newrow["NOTE"] = "Hatalı Giriş.";
+                AgentGc data = new AgentGc();
+                string veri = data.DataAdded("LOGERROR", newrow, dsLogError.Tables[0]);
+
                 Session["loginFailed"] = true;
                 return Redirect("/Account/Login");
             }
@@ -462,6 +584,178 @@ namespace CinemaWeb.Controllers
             Session.Abandon();
             //AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
+        }
+
+        #endregion
+
+        #region LogError
+
+        // GET: /Account/
+        public ActionResult LogError()
+        {
+            using (DataVw dMan = new DataVw())
+            {
+                dsLogError = dMan.ExecuteView_S("LOGERROR", "*", "", "", "");
+            }
+
+            List<Logerror> logError = new List<Logerror>();
+            foreach (DataRow dr in dsLogError.Tables[0].Rows)
+            {
+                logError.Add(new Logerror
+                {
+                    ID = (Guid)dr["ID"],
+                    LOGINFO = dr["LOGINFO"].ToString(),
+                    LOGIP = dr["LOGIP"].ToString(),
+                    LOGDATE = (DateTime)dr["LOGDATE"],
+                    EDATE = (DateTime)dr["EDATE"],
+                    EUSRID = dr["EUSRID"].ToString(),
+                    UDATE = (DateTime)dr["UDATE"],
+                    UUSRID = dr["UUSRID"].ToString(),
+                    NOTE = dr["NOTE"].ToString()
+                });
+            }
+
+            ViewBag.LogError = logError;
+
+            return View();
+        }
+
+        public string GetIp()
+        {
+            var strHostName = "";
+            strHostName = Dns.GetHostName();
+            IPHostEntry ipEntry = Dns.GetHostEntry(strHostName);
+            var addr = ipEntry.AddressList;
+            return addr[0].ToString();
+        }
+
+        #endregion
+
+        #region LogTable
+
+        // GET: /Account/
+        public ActionResult LogTable()
+        {
+            using (DataVw dMan = new DataVw())
+            {
+                dsLogTableFilm = dMan.ExecuteView_S("FILM_LOG", "*", "", "", "");
+                dsLogTableHall = dMan.ExecuteView_S("HALL_LOG", "*", "", "", "");
+                dsLogTableFilmTyp = dMan.ExecuteView_S("FILMTYP_LOG", "*", "", "", "");
+            }
+
+            List<LogtableFilm> logtableFilm = new List<LogtableFilm>();
+            foreach (DataRow dr in dsLogTableFilm.Tables[0].Rows)
+            {
+                logtableFilm.Add(new LogtableFilm
+                {
+                    ID = (Guid)dr["ID"],
+                    LOGTABLE = dr["LOGTABLE"].ToString(),
+                    LOGTABLEID = (Guid)dr["LOGTABLEID"],
+                    LOGIP = dr["LOGIP"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    FILMNM = dr["FILMNM"].ToString(),
+                    FILMIMG = dr["FILMIMG"].ToString(),
+                    EDATE = (DateTime)dr["EDATE"],
+                    EUSRID = dr["EUSRID"].ToString(),
+                    UDATE = (DateTime)dr["UDATE"],
+                    UUSRID = dr["UUSRID"].ToString(),
+                    NOTE = dr["NOTE"].ToString()
+                });
+            }
+
+            ViewBag.LogtableFilm = logtableFilm;
+
+            List<LogtableHall> logtableHall = new List<LogtableHall>();
+            foreach (DataRow dr in dsLogTableHall.Tables[0].Rows)
+            {
+                logtableHall.Add(new LogtableHall
+                {
+                    ID = (Guid)dr["ID"],
+                    LOGTABLE = dr["LOGTABLE"].ToString(),
+                    LOGTABLEID = (Guid)dr["LOGTABLEID"],
+                    LOGIP = dr["LOGIP"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    HALLNM = dr["HALLNM"].ToString(),
+                    EDATE = (DateTime)dr["EDATE"],
+                    EUSRID = dr["EUSRID"].ToString(),
+                    UDATE = (DateTime)dr["UDATE"],
+                    UUSRID = dr["UUSRID"].ToString(),
+                    NOTE = dr["NOTE"].ToString()
+                });
+            }
+            ViewBag.LogtableHall = logtableHall;
+
+            List<LogtableFilmTyp> logtableFilmTyp = new List<LogtableFilmTyp>();
+            foreach (DataRow dr in dsLogTableFilmTyp.Tables[0].Rows)
+            {
+                logtableFilmTyp.Add(new LogtableFilmTyp
+                {
+                    ID = (Guid)dr["ID"],
+                    LOGTABLE = dr["LOGTABLE"].ToString(),
+                    LOGTABLEID = (Guid)dr["LOGTABLEID"],
+                    LOGIP = dr["LOGIP"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    FILMTYPNM = dr["FILMTYPNM"].ToString(),
+                    EDATE = (DateTime)dr["EDATE"],
+                    EUSRID = dr["EUSRID"].ToString(),
+                    UDATE = (DateTime)dr["UDATE"],
+                    UUSRID = dr["UUSRID"].ToString(),
+                    NOTE = dr["NOTE"].ToString()
+                });
+            }
+
+            ViewBag.LogtableFilmTyp = logtableFilmTyp;
+
+            return View();
+        }
+
+        #endregion
+
+        #region Transactions
+
+        //
+        // GET: /Account/
+        public ActionResult Transactions()
+        {
+            using (DataVw dMan = new DataVw())
+            {
+                dsUserTransactions = dMan.ExecuteView_S("TICKETINFO_V", "*", Session["USRIDv"].ToString(), "", "USRID = ");
+            }
+
+            List<UserTransactions> userTransactions = new List<UserTransactions>();
+            foreach (DataRow dr in dsUserTransactions.Tables[0].Rows)
+            {
+                userTransactions.Add(new UserTransactions
+                {
+                    ID = (Guid)dr["ID"],
+                    FILMID = (Guid)dr["FILMID"],
+                    HALLID = (Guid)dr["HALLID"],
+                    HALLTIMEID = (Guid)dr["HALLTIMEID"],
+                    SEATID = (Guid)dr["SEATID"],
+                    USRID = (Guid)dr["USRID"],
+                    DATETIME = (DateTime)dr["DATETIME"],
+                    FID = (Guid)dr["FID"],
+                    FILMNM = dr["FILMNM"].ToString(),
+                    FILMIMG = dr["FILMIMG"].ToString(),
+                    VISIONDATE = (DateTime)dr["VISIONDATE"],
+                    TIME = dr["TIME"].ToString(),
+                    EXPLANATION = dr["EXPLANATION"].ToString(),
+                    HID = (Guid)dr["HID"],
+                    HALLNM = dr["HALLNM"].ToString(),
+                    HTID = (Guid)dr["HTID"],
+                    HALLTIME = dr["HALLTIME"].ToString(),
+                    SID = (Guid)dr["SID"],
+                    SEATNM = dr["SEATNM"].ToString(),
+                    UID = (Guid)dr["UID"],
+                    USRNM = dr["USRNM"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    AVATAR = dr["AVATAR"].ToString()
+                });
+            }
+
+            ViewBag.UserTransactions = userTransactions;
+
+            return View();
         }
 
         #endregion

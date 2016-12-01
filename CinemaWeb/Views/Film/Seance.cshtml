@@ -1,0 +1,52 @@
+﻿
+@{
+    ViewBag.Title = "Seanslar";
+}
+
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+    <h2>Film Seans Ayarları</h2>
+
+    <hr class="colorgraph">
+    
+    <div class="panel panel-default">
+        <div class="panel-heading">Seans Ekle</div>
+        <div class="panel-body">
+            @if (Convert.ToBoolean(Session["filmaddsuccess"]) == true)
+            {
+                Session["filmaddsuccess"] = false;
+                <div class="alert alert-info" role="alert">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    <span class="sr-only">İnfo:</span>
+                    Kayıt Edildi.
+                </div>
+            }
+            <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/SeanceAdd" style="width: 50%;margin: 0 auto;">
+                <hr class="colorgraph">
+                <div class="form-group">
+                    <label for="username" class="col-sm-4 control-label">Film Kategori :</label>
+                    @Html.DropDownList("FilmList", null, "Filmler", new { @class = "form-control", @required = "" })
+                </div>
+                <div class="form-group">
+                    <label for="username" class="col-sm-4 control-label">Film Kategori :</label>
+                    @Html.DropDownList("HallList", null, "Salonlar", new { @class = "form-control", @required = "" })
+                </div>
+                <div class="form-group">
+                    <label for="username" class="col-sm-4 control-label">Film Kategori :</label>
+                    @Html.DropDownList("HallTimeList", null, "Saatler", new { @class = "form-control", @required = "" })
+                </div>
+                <hr class="colorgraph">
+                <button class="btn btn-success col-sm-offset-4">Seans Kaydet</button>
+            </form>
+        </div>
+    </div>
+    
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span class="sr-only">Error:</span>
+        Yetkiniz Yok.
+    </div>
+}

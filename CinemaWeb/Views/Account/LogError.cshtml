@@ -1,0 +1,47 @@
+﻿
+@{
+    ViewBag.Title = "Hatalı Girişler";
+}
+
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+    <h2>Hatalı Girişler</h2>
+    
+    <hr class="colorgraph">
+    
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th>LOG Bilgi</th>
+                <th>LOG IP</th>
+                <th>LOG Tarihi</th>
+                <th>LOG Notu</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int count = 0;}
+            @foreach (var logerror in ViewBag.LogError)
+            {
+                count++;
+                <tr>
+                    <th style="text-align: center; line-height: 50px;">@count</th>
+                    <td style="text-align: center; line-height: 50px;">@logerror.LOGINFO</td>
+                    <td style="text-align: center; line-height: 50px;">@logerror.LOGIP</td>
+                    <td style="text-align: center; line-height: 50px;">@logerror.LOGDATE.ToString("dd.MM.yyyy")</td>
+                    <td style="text-align: center; line-height: 50px;">@logerror.NOTE</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span class="sr-only">Error:</span>
+        Yetkiniz Yok.
+    </div>
+}
+
+

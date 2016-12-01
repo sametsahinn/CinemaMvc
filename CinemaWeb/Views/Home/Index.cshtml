@@ -12,7 +12,7 @@
             <a href="#2a" data-toggle="tab">Yakında Gelicek Filmler</a>
         </li>
     </ul>
-
+    <hr class="colorgraph">
     <div class="tab-content clearfix">
         <div class="tab-pane active" id="1a">
             <br />
@@ -24,9 +24,9 @@
                         <div class="thumbnail">
                             <img src="@Url.Content(@film.FILMIMG)" alt="film" />
                             <div class="caption">
-                                <h3>@film.FILMNM</h3>
+                                <h3 style ="font-size: 21px;">@film.FILMNM</h3>
                                 <p>@film.TIME</p>
-                                <p>@film.VISIONDATE</p>
+                                <p>@film.VISIONDATE.ToString("dd.MM.yyyy")</p>
                                 <p>@film.EXPLANATION</p>
                                 <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>
                                 @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
@@ -47,9 +47,9 @@
                             <div class="thumbnail">
                                 <img src="@Url.Content(@film.FILMIMG)" alt="film" />
                                 <div class="caption">
-                                    <h3>@film.FILMNM</h3>
+                                    <h3 style="font-size: 21px;">@film.FILMNM</h3>
                                     <p>@film.TIME</p>
-                                    <p>@film.VISIONDATE</p>
+                                    <p>@film.VISIONDATE.ToString("dd.MM.yyyy")</p>
                                     <p>@film.EXPLANATION</p>
                                     <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>
                                     @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@

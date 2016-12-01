@@ -5,6 +5,8 @@
 
 <h2>Seçilen Kategori</h2>
 
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
 <div class="row">
 
     <div class="panel panel-default">
@@ -25,3 +27,12 @@
         </div>
     </div>
 </div>
+
+}
+else {
+<div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-remove"></span>
+    <span class="sr-only">Error:</span>
+    Yetkiniz Yok.
+</div>
+}

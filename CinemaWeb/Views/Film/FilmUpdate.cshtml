@@ -5,6 +5,8 @@
 
 <h2>Film Güncelle</h2>
 
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
 <div class="row">
     <table class="table table-bordered">
         <thead class="thead-inverse">
@@ -20,15 +22,17 @@
             </tr>
         </thead>
         <tbody>
+            @{int count = 0;}
             @foreach (var filmTypV in ViewBag.FilmTypV)
-            {               
+            {
+                count++;           
                 <tr>
                     <form class="form-horizontal" method="post" action="/Film/FilmUpdateSelect">
-                        <th style="text-align: center; line-height: 290px;" scope="row">1</th>
+                        <th style="text-align: center; line-height: 290px;">@count</th>
                         <td style="text-align: center; line-height: 290px; width: 150px;"><img src="@Url.Content(@filmTypV.FILMIMG)" alt="avatar" /></td>
                         <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.FILMNM</td>
                         <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.FILMTYPNM</td>
-                        <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.VISIONDATE</td>
+                        <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.VISIONDATE.ToString("dd.MM.yyyy")</td>
                         <td style="text-align: center; line-height: 290px; width: 150px;">@filmTypV.TIME</td>
                         <td style="text-align: center; line-height: 50px;">@filmTypV.EXPLANATION</td>
                         <td style="text-align: center; line-height: 290px;"><button id="@filmTypV.ID" class="btn btn-primary col-sm-offset-4" style="margin: 0;" name="btnFilmID" value="@filmTypV.ID"><i class="fa fa-refresh" aria-hidden="true"></i> Seç</button></td>
@@ -38,3 +42,12 @@
         </tbody>
     </table>
 </div>
+
+}
+else {
+<div class="alert alert-danger" role="alert">
+    <span class="glyphicon glyphicon-remove"></span>
+    <span class="sr-only">Error:</span>
+    Yetkiniz Yok.
+</div>
+}

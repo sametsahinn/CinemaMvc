@@ -22,18 +22,18 @@
             </tr>
         </thead>
         <tbody>
+            @{int count = 0;}
             @foreach (var ticketInfo in ViewBag.TicketInfoList)
             {
+                count++;
                 <tr>
-                    <form class="form-horizontal" method="post" action="/Film/**">
-                        <th style="text-align: center; line-height: 255px;" scope="row">1</th>
-                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@ticketInfo.FILMIMG)" style="width: 150px;height: 200px;" alt="avatar" /> <br /> @ticketInfo.FILMNM</td>
-                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.HALLNM</td>
-                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.HALLTIME</td>
-                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.SEATNM</td>
-                        <td style="text-align: center; line-height: 255px; ">@ticketInfo.DATETIME.ToString("dd.MM.yyyy")</td>
-                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@ticketInfo.AVATAR)" alt="avatar" /> <br /> @ticketInfo.FULNM</td>
-                    </form>
+                    <th style="text-align: center; line-height: 255px;">@count</th>
+                    <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@ticketInfo.FILMIMG)" style="width: 150px;height: 200px;" alt="avatar" /> <br /> @ticketInfo.FILMNM</td>
+                    <td style="text-align: center; line-height: 255px; ">@ticketInfo.HALLNM</td>
+                    <td style="text-align: center; line-height: 255px; ">@ticketInfo.HALLTIME</td>
+                    <td style="text-align: center; line-height: 255px; ">@ticketInfo.SEATNM</td>
+                    <td style="text-align: center; line-height: 255px; ">@ticketInfo.DATETIME.ToString("dd.MM.yyyy")</td>
+                    <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@ticketInfo.AVATAR)" alt="avatar" /> <br /> @ticketInfo.FULNM</td>
                 </tr>
            }
         </tbody>
