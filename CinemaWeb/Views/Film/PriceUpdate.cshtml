@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Bilet Fiyat Güncelle";
+}
+
+<h2>Bilet Fiyat Güncelle</h2>
+
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+    <div class="row">
+    <table class="table table-bordered">
+        <thead class="thead-inverse">
+            <tr>
+                <th>#</th>
+                <th>Fiyat</th>
+                <th>Fiyat ₺</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @{int count = 0;}
+            @foreach (var priceList in ViewBag.PriceList)
+            {
+                count++;
+                <tr>
+                    <form class="form-horizontal" method="post" action="/Film/PriceUpdateSelect">
+                        <th style="text-align: center; line-height: 50px;">@count</th>
+                        <td style="text-align: center; line-height: 50px;">@priceList.PRICENM</td>
+                        <td style="text-align: center; line-height: 50px;">@priceList.PRICE</td>
+                        <td style="text-align: center; line-height: 50px;"><button id="@priceList.ID" class="btn btn-primary col-sm-offset-4" style="margin: 0;" name="btnCategory" value="@priceList.ID"><i class="fa fa-refresh" aria-hidden="true"></i> Seç</button></td>
+                    </form>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span class="sr-only">Error:</span>
+        Yetkiniz Yok.
+    </div>
+}

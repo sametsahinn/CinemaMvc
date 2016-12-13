@@ -25,6 +25,7 @@ namespace CinemaWeb.Controllers
         public DataSet dsTicketInfo = new DataSet();
         public DataSet dsLogTable = new DataSet();
         public DataSet dsFilmD = new DataSet();
+        public DataSet dsTicketPrice = new DataSet();
 
         #region Model
 
@@ -89,6 +90,13 @@ namespace CinemaWeb.Controllers
             public string FULNM { get; set; }
             //public string PWD { get; set; }
             public string AVATAR { get; set; }
+        }
+
+        public class PriceList
+        {
+            public Guid ID { get; set; }
+            public string PRICENM { get; set; }
+            public string PRICE { get; set; }
         }
         
         #endregion
@@ -765,13 +773,117 @@ namespace CinemaWeb.Controllers
 
         #endregion
 
+        #region PriceUpdate
+
+        public ActionResult PriceUpdate()
+        {
+            using (DataVw dMan = new DataVw())
+            {
+                dsTicketPrice = dMan.ExecuteView_S("PRICES", "*", "", "", "");
+            }
+            
+            List<PriceList> priceList = new List<PriceList>();
+            foreach (DataRow dr in dsTicketPrice.Tables[0].Rows)
+            {
+                priceList.Add(new PriceList{ 
+                                    ID = (Guid)dr["ID"],
+                                    PRICENM = dr["PRICENM"].ToString(),
+                                    PRICE = dr["PRICE"].ToString(),
+
+                });
+            }
+
+            ViewBag.PriceList = priceList;
+
+            return View();
+        }
+
+        public ActionResult PriceUpdateSelect(FormCollection collection)
+        {
+            string PRICEID = collection["btnCategory"];
+            Session["PRICEID"] = PRICEID;
+
+            return Redirect("/Film/PriceUpdateEnd");
+        }
+
+        public ActionResult PriceUpdateEnd()
+        {
+            string PRICEID = Session["PRICEID"].ToString();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsTicketPrice = dMan.ExecuteView_S("PRICES", "*", PRICEID, "", "ID = ");
+            }
+
+            List<PriceList> priceList = new List<PriceList>();
+            foreach (DataRow dr in dsTicketPrice.Tables[0].Rows)
+            {
+                priceList.Add(new PriceList
+                {
+                    ID = (Guid)dr["ID"],
+                    PRICENM = dr["PRICENM"].ToString(),
+                    PRICE = dr["PRICE"].ToString(),
+
+                });
+            }
+
+            ViewBag.PriceList = priceList;
+
+            return View();
+        }
+
+        public ActionResult PriceUpdateEndAction(string txtPRICENM, string txtPRICE, FormCollection collection)
+        {
+            string C = collection["btnCatID"];
+            string PRICEID = Session["PRICEID"].ToString();
+
+            using (DataVw dMan = new DataVw())
+            {
+                dsTicketPrice = dMan.ExecuteView_S("PRICES", "*", PRICEID, "", "ID = ");
+                dsLogTable = dMan.ExecuteView_S("LOGTABLE", "*", "", "", "");
+            }
+
+            DataRow newrow = dsTicketPrice.Tables[0].Rows[0];
+            newrow["ID"] = PRICEID;
+            newrow["PRICENM"] = txtPRICENM;
+            newrow["PRICE"] = txtPRICE;
+            //newrow["EDATE"] = DateTime.Now;
+            //newrow["EUSRID"] = null;
+            newrow["UDATE"] = DateTime.Now;
+            //newrow["UUSRID"] = null;
+            newrow["NOTE"] = "En Son Güncelleme İşlemi Gerçekleştirdi.";
+            AgentGc data = new AgentGc();
+            string veri = data.DataModified("PRICES", newrow, dsTicketPrice.Tables[0]);
+            if (veri == "İşleminiz Tamamlandı..")
+            {
+                DataRow _newrow = dsLogTable.Tables[0].NewRow();
+                _newrow["ID"] = Guid.NewGuid();
+                _newrow["LOGTABLE"] = "PRICES";
+                _newrow["LOGTABLEID"] = PRICEID;
+                _newrow["LOGIP"] = GetIp();
+                _newrow["LOGUSRID"] = Session["USRIDv"].ToString();
+                _newrow["EDATE"] = DateTime.Now;
+                //newrow["EUSRID"] = null;
+                _newrow["UDATE"] = DateTime.Now;
+                //newrow["UUSRID"] = null;
+                _newrow["NOTE"] = "Güncelleme İşlemi.";
+                AgentGc _data = new AgentGc();
+                string _veri = _data.DataAdded("LOGTABLE", _newrow, dsLogTable.Tables[0]);
+                Session["filmaddsuccess"] = true;
+            }
+            
+            return Redirect("/Film/PriceUpdate");
+        }
+
+        #endregion
+
         #region FilmTicketProcess
 
         public ActionResult FilmTicketProcess()
         {
             using (DataVw dMan = new DataVw())
             {
-                dsTicketInfo = dMan.ExecuteView_S("TICKETINFO_V", "*", "", "", "");
+                dsTicketInfo = dMan.ExecuteView_S("TICKETINFO_V WHERE STATUS = 1", "*", "", "", "");
             }
 
             List<TicketInfo> ticketInfoList = new List<TicketInfo>();

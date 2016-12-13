@@ -29,6 +29,7 @@ namespace CinemaWeb.Controllers
         public DataSet dsLogTableHall = new DataSet();
         public DataSet dsLogTableFilmTyp = new DataSet();
         public DataSet dsUserTransactions = new DataSet();
+        public DataSet dsUserTransactionsD = new DataSet();
         public static User UserData;
 
         #region LoginInfo Class Çağır
@@ -146,6 +147,8 @@ namespace CinemaWeb.Controllers
             public Guid SEATID { get; set; }
             public Guid USRID { get; set; }
             public DateTime DATETIME { get; set; }
+            public string TICKETPRICE { get; set; }
+            public string STATUS { get; set; }
             public Guid FID { get; set; }
             public string FILMNM { get; set; }
             public string FILMIMG { get; set; }
@@ -541,14 +544,18 @@ namespace CinemaWeb.Controllers
                 newrow["IS_HR"] = 0;
                 newrow["CHNG_PWD"] = 0;
                 if (filefo == ""){
-                    newrow["AVATAR"] = "~/images/avatar/nullavatar.jpg";
+                    //newrow["AVATAR"] = "~/images/avatar/nullavatar.jpg";
+                    newrow["AVATAR"] = newrow["AVATAR"];
                 }else{
                     newrow["AVATAR"] = filefo;
                 }
-                newrow["CARDNO"] = txtCARDNO;
-                newrow["CVC"] = txtCVC;
-                newrow["STKDAY"] = txtSTKDAY;
-                newrow["STKMONTH"] = txtSTKMONTH;
+                if (!Convert.ToBoolean(Session["IS_SYSADM"]))
+                {
+                    newrow["CARDNO"] = txtCARDNO;
+                    newrow["CVC"] = txtCVC;
+                    newrow["STKDAY"] = txtSTKDAY;
+                    newrow["STKMONTH"] = txtSTKMONTH;
+                }
                 //newrow["EDATE"] = DateTime.Now;
                 //newrow["EUSRID"] = null;
                 newrow["UDATE"] = DateTime.Now;
@@ -719,12 +726,15 @@ namespace CinemaWeb.Controllers
         {
             using (DataVw dMan = new DataVw())
             {
-                dsUserTransactions = dMan.ExecuteView_S("TICKETINFO_V", "*", Session["USRIDv"].ToString(), "", "USRID = ");
+                dsUserTransactions = dMan.ExecuteView_S("TICKETINFO_V WHERE USRID = '" + Session["USRIDv"].ToString() + "' AND STATUS = 1", "*", "", "", "");
+                dsUserTransactionsD = dMan.ExecuteView_S("TICKETINFO_V WHERE USRID = '" + Session["USRIDv"].ToString() + "' AND STATUS = 0", "*", "", "", "");
             }
 
+            string SSTATUS = "";
             List<UserTransactions> userTransactions = new List<UserTransactions>();
             foreach (DataRow dr in dsUserTransactions.Tables[0].Rows)
             {
+                if (Convert.ToBoolean(dr["STATUS"])) { SSTATUS = "Ödendi"; }
                 userTransactions.Add(new UserTransactions
                 {
                     ID = (Guid)dr["ID"],
@@ -734,6 +744,42 @@ namespace CinemaWeb.Controllers
                     SEATID = (Guid)dr["SEATID"],
                     USRID = (Guid)dr["USRID"],
                     DATETIME = (DateTime)dr["DATETIME"],
+                    TICKETPRICE = dr["TICKETPRICE"].ToString() + " ₺",
+                    STATUS = SSTATUS,
+                    FID = (Guid)dr["FID"],
+                    FILMNM = dr["FILMNM"].ToString(),
+                    FILMIMG = dr["FILMIMG"].ToString(),
+                    VISIONDATE = (DateTime)dr["VISIONDATE"],
+                    TIME = dr["TIME"].ToString(),
+                    EXPLANATION = dr["EXPLANATION"].ToString(),
+                    HID = (Guid)dr["HID"],
+                    HALLNM = dr["HALLNM"].ToString(),
+                    HTID = (Guid)dr["HTID"],
+                    HALLTIME = dr["HALLTIME"].ToString(),
+                    SID = (Guid)dr["SID"],
+                    SEATNM = dr["SEATNM"].ToString(),
+                    UID = (Guid)dr["UID"],
+                    USRNM = dr["USRNM"].ToString(),
+                    FULNM = dr["FULNM"].ToString(),
+                    AVATAR = dr["AVATAR"].ToString()
+                });
+            }
+
+            List<UserTransactions> userTransactionsD = new List<UserTransactions>();
+            foreach (DataRow dr in dsUserTransactionsD.Tables[0].Rows)
+            {
+                if (!Convert.ToBoolean(dr["STATUS"])) { SSTATUS = "Ödeme Yapılmadı"; }
+                userTransactionsD.Add(new UserTransactions
+                {
+                    ID = (Guid)dr["ID"],
+                    FILMID = (Guid)dr["FILMID"],
+                    HALLID = (Guid)dr["HALLID"],
+                    HALLTIMEID = (Guid)dr["HALLTIMEID"],
+                    SEATID = (Guid)dr["SEATID"],
+                    USRID = (Guid)dr["USRID"],
+                    DATETIME = (DateTime)dr["DATETIME"],
+                    TICKETPRICE = dr["TICKETPRICE"].ToString() + " ₺",
+                    STATUS = SSTATUS,
                     FID = (Guid)dr["FID"],
                     FILMNM = dr["FILMNM"].ToString(),
                     FILMIMG = dr["FILMIMG"].ToString(),
@@ -754,6 +800,7 @@ namespace CinemaWeb.Controllers
             }
 
             ViewBag.UserTransactions = userTransactions;
+            ViewBag.UserTransactionsD = userTransactionsD;
 
             return View();
         }

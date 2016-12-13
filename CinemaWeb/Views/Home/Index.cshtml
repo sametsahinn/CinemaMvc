@@ -19,12 +19,12 @@
             @foreach (var film in ViewBag.FilmListD)
             {
 
-                <form class="form-horizontal" method="post" action="/Home/FilmTicket">
-                    <div class="col-sm-6 col-md-4" style="margin-bottom: 10px;">
+                <form class="form-horizontal" method="post" id="paginationForm" action="/Home/FilmTicket">
+                    <div id="paginationdiv" class="col-sm-6 col-md-4" style="margin-bottom: 10px;">
                         <div class="thumbnail">
                             <img src="@Url.Content(@film.FILMIMG)" alt="film" />
                             <div class="caption">
-                                <h3 style ="font-size: 21px;">@film.FILMNM</h3>
+                                <h3 style="font-size: 21px;">@film.FILMNM</h3>
                                 <p>@film.TIME</p>
                                 <p>@film.VISIONDATE.ToString("dd.MM.yyyy")</p>
                                 <p>@film.EXPLANATION</p>
@@ -35,32 +35,33 @@
                     </div>
                 </form>
             }
+
         </div>
+        <!--<div id="pagination"></div>-->
         <div class="tab-pane" id="2a">
             <div class="tab-pane active" id="2a">
                 <br />
                 @foreach (var film in ViewBag.FilmSoon)
-                {
+{
 
-                    <form class="form-horizontal" method="post" action="/Home/FilmTicket">
-                        <div class="col-sm-6 col-md-4" style="margin-bottom: 10px;">
-                            <div class="thumbnail">
-                                <img src="@Url.Content(@film.FILMIMG)" alt="film" />
-                                <div class="caption">
-                                    <h3 style="font-size: 21px;">@film.FILMNM</h3>
-                                    <p>@film.TIME</p>
-                                    <p>@film.VISIONDATE.ToString("dd.MM.yyyy")</p>
-                                    <p>@film.EXPLANATION</p>
-                                    <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>
-                                    @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                }
+    <form class="form-horizontal" method="post" action="/Home/FilmTicket">
+        <div class="col-sm-6 col-md-4" style="margin-bottom: 10px;">
+            <div class="thumbnail">
+                <img src="@Url.Content(@film.FILMIMG)" alt="film" />
+                <div class="caption">
+                    <h3 style="font-size: 21px;">@film.FILMNM</h3>
+                    <p>@film.TIME</p>
+                    <p>@film.VISIONDATE.ToString("dd.MM.yyyy")</p>
+                    <p>@film.EXPLANATION</p>
+                    <p><button id="@film.ID" class="btn btn-success col-sm-offset-4" name="@film.ID" value="@film.ID"><i class="fa fa-credit-card"></i> Bilet Al</button></p>
+                    @*<p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>*@
+                </div>
             </div>
         </div>
-    </div>
+    </form>
+}
+            </div>
+        </div>
 
     
 </div>

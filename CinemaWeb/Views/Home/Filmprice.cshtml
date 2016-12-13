@@ -1,0 +1,72 @@
+﻿@{
+    ViewBag.Title = "Sinema Bileti";
+}
+
+
+<link href="~/css/price-style.css" rel="stylesheet" type="text/css" />
+<script src="~/js/jquery-price.js"></script>
+
+<div class="container">
+
+    
+        @{int count = 0;}
+@foreach (var filmprice in ViewBag.Filmprice)
+{
+    count++;
+    <form class="form-horizontal form-pricing" role="form" action="/Home/TotalSumInfo" style="width: 45.333333%;float: left;margin-right: 50px;">
+        <div class="price-slider">
+            <h4 class="great">@filmprice.PRICENM</h4>
+            <div class="col-sm-12">
+                <div id="slider-@count"></div>
+            </div>
+        </div>
+        <div class="price-form">
+            <div class="form-group">
+                <label for="@filmprice.PRICENM.ToLower()" class="col-sm-6 control-label">@filmprice.PRICENM : @filmprice.PRICE ₺</label>
+                <div class="col-sm-6" id="@filmprice.PRICENM.ToLower()">
+                    <input type="hidden" id="txtPRICE" class="form-control" name="@filmprice.PRICE" value="@filmprice.PRICE">
+                    <input type="hidden" id="@filmprice.PRICENM.ToLower()" class="form-control">
+                    <p class="price lead" id="@filmprice.PRICENM.ToLower()-label"></p>
+                    <span class="price"> Adet</span>
+                </div>
+            </div>
+            <hr class="style">
+        </div>
+    </form>
+    
+}
+
+    <form class="form-horizontal form-pricing" method="post" action="/Home/TotalSumInfo" style="width: 95%;float: left;margin: 0 auto;background: transparent;">
+        <hr class="colorgraph">
+        <div>
+            <div class="price-form total">
+                <div class="form-group">
+                    <label for="total" class="col-sm-6 control-label">Toplam: </label>
+                    <div class="col-sm-6">
+                        <input type="hidden" id="total" name="txttotalTicket" class="form-control totalTicket" value="0">
+                        <input type="hidden" id="totalPiece" name="txttotalTicketPiece" class="form-control totalPiece" value="0">
+                        <p class="price lead" id="total-label">0</p>
+                        <span class="price"></span>
+                    </div>
+                </div>
+                <hr class="style">
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <!--<input type="hidden" id="totalBtn" name="txttotalTicket" class="form-control" value="0">-->
+                    <button type="submit" id="totalBtn" onclick="location.href='@Url.Action("TotalSumInfo", "Home")'" value="0" class="btn btn-primary btn-lg btn-block totalValue">Devam Et <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <img src="/images/card.png" class="img-responsive payment" />
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script src="~/js/jquery-ui.min.js"></script>

@@ -7,35 +7,88 @@
 
 <hr class="colorgraph">
 
-<table class="table table-bordered">
-    <thead class="thead-inverse">
-        <tr>
-            <th>#</th>
-            <th>Film Adı</th>
-            <th>Salon Adı</th>
-            <th>Seans</th>
-            <th>Koltuk Numarası</th>
-            <th>Alınan Tarih</th>
-            <th>Alan Kişi</th>
-        </tr>
-    </thead>
-    <tbody>
-        @{int count = 0;}
-        @foreach (var userTransactions in ViewBag.UserTransactions)
-        {
-            count++;
-            <tr>
-                <th style="text-align: center; line-height: 255px;">@count</th>
-                <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@userTransactions.FILMIMG)" style="width: 150px;height: 200px;" alt="avatar" /> <br /> @userTransactions.FILMNM</td>
-                <td style="text-align: center; line-height: 255px; ">@userTransactions.HALLNM</td>
-                <td style="text-align: center; line-height: 255px; ">@userTransactions.HALLTIME</td>
-                <td style="text-align: center; line-height: 255px; ">@userTransactions.SEATNM</td>
-                <td style="text-align: center; line-height: 255px; ">@userTransactions.DATETIME.ToString("dd.MM.yyyy")</td>
-                <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@userTransactions.AVATAR)" alt="avatar" /> <br /> @userTransactions.FULNM</td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div id="exTab1" class="container">
+    <ul class="nav nav-pills">
+        <li class="active">
+            <a href="#1a" data-toggle="tab">İşlemleriniz</a>
+        </li>
+        <li>
+            <a href="#2a" data-toggle="tab">Tamamlanmamış İşlemler</a>
+        </li>
+    </ul>
+</div>
+
+<div class="tab-content clearfix">
+    <div class="tab-pane active" id="1a">
+        <br />
+        <table class="table table-bordered">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Film Adı</th>
+                    <th>Salon Adı</th>
+                    <th>Seans</th>
+                    <th>Koltuk Numarası</th>
+                    <th>Alınan Tarih</th>
+                    <th>Alan Kişi</th>
+                    <th>Bilgi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int count = 0;}
+                @foreach (var userTransactions in ViewBag.UserTransactions)
+                {
+                    count++;
+                    <tr>
+                        <th style="text-align: center; line-height: 255px;">@count</th>
+                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@userTransactions.FILMIMG)" style="width: 150px;height: 200px;" alt="avatar" /> <br /> @userTransactions.FILMNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactions.HALLNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactions.HALLTIME</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactions.SEATNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactions.DATETIME.ToString("dd.MM.yyyy")</td>
+                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@userTransactions.AVATAR)" alt="avatar" /> <br /> @userTransactions.FULNM</td>
+                        <td style="text-align: center; line-height: 50px; ">@userTransactions.STATUS</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="tab-pane" id="2a">
+        <br />
+        <table class="table table-bordered">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Film Adı</th>
+                    <th>Salon Adı</th>
+                    <th>Seans</th>
+                    <th>Koltuk Numarası</th>
+                    <th>Alınan Tarih</th>
+                    <th>Alan Kişi</th>
+                    <th>Bilgi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int countt = 0;}
+                @foreach (var userTransactionsD in ViewBag.UserTransactionsD)
+                {
+                    count++;
+                    <tr>
+                        <th style="text-align: center; line-height: 255px;">@countt</th>
+                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@userTransactionsD.FILMIMG)" style="width: 150px;height: 200px;" alt="avatar" /> <br /> @userTransactionsD.FILMNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactionsD.HALLNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactionsD.HALLTIME</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactionsD.SEATNM</td>
+                        <td style="text-align: center; line-height: 255px; ">@userTransactionsD.DATETIME.ToString("dd.MM.yyyy")</td>
+                        <td style="text-align: center; line-height: 50px; "><img src="@Url.Content(@userTransactionsD.AVATAR)" alt="avatar" /> <br /> @userTransactionsD.FULNM</td>
+                        <td style="text-align: center; line-height: 50px; ">@userTransactionsD.STATUS <br /> <button class="btn btn-success col-sm-offset-4" id="@userTransactionsD.ID" name="@userTransactionsD.ID" value="@userTransactionsD.ID" style="margin: 0;"><i class="fa fa-credit-card"></i> Ödeme Yap </button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 

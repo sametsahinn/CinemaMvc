@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "PriceUpdateEnd";
+}
+
+<h2>Seçilen Fiyat</h2>
+
+@if (Convert.ToBoolean(Session["IS_SYSADM"]))
+{
+    <div class="row">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Bilgilerinizi Güncelleyin</div>
+        <div class="panel-body">
+            @foreach (var priceList in ViewBag.PriceList)
+{
+    <form enctype="multipart/form-data" class="form-horizontal" method="post" action="/Film/PriceUpdateEndAction" style="width: 50%;margin: 0 auto;">
+        <hr class="colorgraph">
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Fiyat Açıklama :</label>
+            <input class="form-control col-xs-12" name="txtPRICENM" required="" autofocus="" placeholder="Fiyat Açıklama" value="@priceList.PRICENM" />
+        </div>
+        <div class="form-group">
+            <label for="username" class="col-sm-4 control-label">Fiyat :</label>
+            <input class="form-control col-xs-12" name="txtPRICE" required="" autofocus="" placeholder="Fiyat" value="@priceList.PRICE" />
+        </div>
+        <hr class="colorgraph">
+        <button id="@priceList.ID" class="btn btn-primary col-sm-offset-4" name="btnCatID" value="@priceList.ID"><i class="fa fa-check" aria-hidden="true"></i> Güncelle</button>
+    </form>
+}
+        </div>
+    </div>
+</div>
+
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        <span class="glyphicon glyphicon-remove"></span>
+        <span class="sr-only">Error:</span>
+        Yetkiniz Yok.
+    </div>
+}
+

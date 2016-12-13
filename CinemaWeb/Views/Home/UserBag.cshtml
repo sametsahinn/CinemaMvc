@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Sepet";
+}
+
+<h2>Sepet</h2>
+
+@if (Convert.ToBoolean(Session["IsAuthenticated"]))
+{
+    <div class="row">
+        <br />
+        <table class="table table-bordered">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>#</th>
+                    <th>Film Adı</th>
+                    <th>Salon Adı</th>
+                    <th>Seans</th>
+                    <th>Koltuk Numarası</th>
+                    <th>Alınan Tarih</th>
+                    <th>Alan Kişi</th>
+                    <th>Bilgi</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int count = 0;}
+                    @foreach (var userBag in ViewBag.UserBag)
+                    {
+                        count++;
+                        <tr>
+                            <form class="form-horizontal" method="post" action="/Home/BagTransactions">
+                                <th style="text-align: center; line-height: 255px;">@count</th>
+                                <td style="text-align: center; line-height: 50px;"><img src="@Url.Content(@userBag.FILMIMG)" style="width: 150px;height: 200px;" alt="avatar" /> <br /> @userBag.FILMNM</td>
+                                <td style="text-align: center; line-height: 255px;">@userBag.HALLNM</td>
+                                <td style="text-align: center; line-height: 255px;">@userBag.HALLTIME</td>
+                                <td style="text-align: center; line-height: 255px;">@userBag.SEATNM</td>
+                                <td style="text-align: center; line-height: 255px;">@userBag.DATETIME.ToString("dd.MM.yyyy")</td>
+                                <td style="text-align: center; line-height: 50px;"><img src="@Url.Content(@userBag.AVATAR)" alt="avatar" /> <br /> @userBag.FULNM</td>
+                                <td style="text-align: center; line-height: 50px;">@userBag.STATUS</td>
+                                <td style="text-align: center; line-height: 50px;">
+                                    <button class="btn btn-success col-sm-offset-4" id="bagTransFun" name="@userBag.ID" value="1" style="margin: 0;"><i class="fa fa-credit-card" aria-hidden="true"></i> Ödeme Yap</button>
+                                    <br />
+                                    <button class="btn btn-danger col-sm-offset-4" id="bagTransFun" name="@userBag.ID" value="0" style="margin: 0;"><i class="fa fa-close" aria-hidden="true"></i> Çıkar</button>
+                                </td>
+                            </form>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="alert alert-danger alert-dismissible fade in" role="alert" style="width: 50%;margin: 0 auto;">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <h4>Hata!</h4>
+        <p>Giriş Yapınız.</p>
+    </div>
+}
+
+ 
+
